@@ -9,7 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -152,6 +154,18 @@ public class UserRegistration extends AppCompatActivity implements View.OnClickL
                                     response.append(responseLine.trim());
                                 }
                                 Log.d("CREATION", response.toString());
+                                JSONObject res = new JSONObject(response.toString());
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            Toast.makeText(getApplicationContext(), res.getString("message"), Toast.LENGTH_LONG).show();
+                                        } catch (JSONException e) {
+                                            Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+                                Log.d("UserRegistration", res.getString("message"));
                             }
 
                         } catch (Exception e) {
