@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 import javax.net.ssl.HttpsURLConnection;
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    public void postRequest() {
+    public JSONObject postRequest() throws InterruptedException {
 
         //URL to POST to
         String query_url = "https://capstone.devmashru.tech/login";
@@ -81,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         String json = root.toString();
         Log.d("CREATION", json);
+
+        final JSONObject[] res = {new JSONObject()};
 
         //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         //StrictMode.setThreadPolicy(policy);
@@ -109,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     response.append(responseLine.trim());
                                 }
                                 Log.d("CREATION", response.toString());
+                                res[0] = new JSONObject(response.toString());
                             }
 
                         } catch (Exception e) {
@@ -120,7 +124,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
         );
         thread.start();
-
+        thread.join();
+    return res[0];
     }
 
         // Sending the JSON object
@@ -184,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view)
     {
+        JSONObject response = new JSONObject();
         switch(view.getId())
         {
             case R.id.registerLink:
@@ -194,15 +200,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.loginButton:
 
                 if (validateUsername() && validatePassword() ){
-                    postRequest();
+                    try {
+                        response = postRequest();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-
+                try {
+                    if(response.getInt("status") == 200){
+                        startActivity(new Intent(this, ChatInterface.class));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 break;
-
             case R.id.registerButton:
                 break;
-
-
         }
     }
 
