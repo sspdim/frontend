@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -103,7 +102,7 @@ public class UserRegistration extends AppCompatActivity implements View.OnClickL
 
 
 /*Need to update post json request for the registration link*/
-    public JSONObject postRequest() throws InterruptedException {
+    public void postRequest() {
 
         //URL to POST to
         String query_url = "https://capstone.devmashru.tech/register";
@@ -127,8 +126,6 @@ public class UserRegistration extends AppCompatActivity implements View.OnClickL
 
         String json = root.toString();
         Log.d("CREATION", json);
-
-        final JSONObject[] res = {new JSONObject()};
 
         //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         //StrictMode.setThreadPolicy(policy);
@@ -157,18 +154,6 @@ public class UserRegistration extends AppCompatActivity implements View.OnClickL
                                     response.append(responseLine.trim());
                                 }
                                 Log.d("CREATION", response.toString());
-                                res[0] = new JSONObject(response.toString());
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            Toast.makeText(getApplicationContext(), res[0].getString("message"), Toast.LENGTH_LONG).show();
-                                        } catch (JSONException e) {
-                                            Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
-                                Log.d("UserRegistration", res[0].getString("message"));
                             }
 
                         } catch (Exception e) {
@@ -180,32 +165,26 @@ public class UserRegistration extends AppCompatActivity implements View.OnClickL
                 }
         );
         thread.start();
-        thread.join();
-    return res[0];
+
     }
 
 
     @Override
     public void onClick(View view) {
-        JSONObject response = new JSONObject();
         switch (view.getId()) {
 
             case R.id.registerButton:
                 if (validateUsername() && validatePassword() ) {
-                    try {
-                        response = postRequest();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    postRequest();
+                    Toast.makeText(getApplicationContext(),"Registration Successfull",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Please Login",Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(this,MainActivity.class));
                 }
+                //startActivity(new Intent(this, MainActivity.class));
+
                 break;
-        }
-        try {
-            if(response.getInt("status") == 200){
-                startActivity(new Intent(this, ChatInterface.class));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+
+
         }
     }
 }

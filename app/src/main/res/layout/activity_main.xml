@@ -10,29 +10,27 @@
     <com.google.android.material.textfield.TextInputLayout
 
 
-        android:visibility="gone"
+        android:id="@+id/trial"
 
-
-        app:errorIconTint="@color/black"
 
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:errorIconDrawable="@drawable/ic_baseline_error_outline_24"
-        app:boxStrokeErrorColor="@color/black"
-        android:id="@+id/trial"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/loginButton"
-        android:layout_marginTop="80dp"
-        android:hint="Username"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="80dp"
         android:layout_marginRight="20dp"
-        >
+        android:hint="Username"
+        android:visibility="gone"
+        app:boxStrokeErrorColor="@color/black"
+        app:errorIconDrawable="@drawable/ic_baseline_error_outline_24"
+        app:errorIconTint="@color/black">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="RANDOM"
-            />
+            android:text="RANDOM" />
     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -87,8 +85,7 @@
         android:padding="15dp"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        app:errorIconDrawable="@drawable/ic_baseline_error_outline_24"
-        />
+        app:errorIconDrawable="@drawable/ic_baseline_error_outline_24" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/loginButton"
@@ -138,8 +135,6 @@
 
 
         />
-
-
 
 
 </RelativeLayout>

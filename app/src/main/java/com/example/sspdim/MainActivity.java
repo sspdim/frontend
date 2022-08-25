@@ -15,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -24,7 +26,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import org.apache.commons.io.IOUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 import javax.net.ssl.HttpsURLConnection;
@@ -43,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String uname;
     private String pass;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,8 +58,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    public JSONObject postRequest() throws InterruptedException {
+    public void postRequest() {
 
+        Boolean flag;
         //URL to POST to
         String query_url = "https://capstone.devmashru.tech/login";
 
@@ -83,12 +84,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String json = root.toString();
         Log.d("CREATION", json);
 
-        final JSONObject[] res = {new JSONObject()};
-
         //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         //StrictMode.setThreadPolicy(policy);
 
+
         Thread thread = new Thread(
+
                 new Runnable() {
                     @Override
                     public void run() {
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                             conn.setRequestMethod("POST");
                             conn.setRequestProperty("Content-Type", "application/json");
+                            conn.setRequestProperty("Accept", "application/json");
                             conn.setDoOutput(true);
                             System.out.println("Before the output stream...");
                             try (OutputStream os = conn.getOutputStream()) {
@@ -112,7 +114,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     response.append(responseLine.trim());
                                 }
                                 Log.d("CREATION", response.toString());
-                                res[0] = new JSONObject(response.toString());
+                                //edited from here
+                                //Gson g = new Gson();
+                                //JSONObject res = g.fromJson(response.toString(), JSONObject.class);
+                                JsonObject res = new Gson().fromJson(response.toString(), JsonObject.class);
+                                Log.d("Validation", res.get("message").toString());
+                                String mes = res.get("message").getAsString();
+                                Log.d("Validation2", mes);
+                                if (mes.equals("Found user")){
+                                    Log.d("Validation","yesss");
+
+                                }else {
+                                    Log.d("Validation", "noooo");
+                                }
                             }
 
                         } catch (Exception e) {
@@ -124,8 +138,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
         );
         thread.start();
-        thread.join();
-    return res[0];
+
     }
 
         // Sending the JSON object
@@ -189,7 +202,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view)
     {
-        JSONObject response = new JSONObject();
         switch(view.getId())
         {
             case R.id.registerLink:
@@ -200,22 +212,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.loginButton:
 
                 if (validateUsername() && validatePassword() ){
-                    try {
-                        response = postRequest();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    postRequest();
+
+                    startActivity(new Intent(this,welcome_page.class));
+
                 }
-                try {
-                    if(response.getInt("status") == 200){
-                        startActivity(new Intent(this, ChatInterface.class));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+
                 break;
+
             case R.id.registerButton:
                 break;
+
+
         }
     }
 
