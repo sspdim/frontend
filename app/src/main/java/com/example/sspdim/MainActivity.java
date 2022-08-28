@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
@@ -56,6 +58,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
+    /*
+
+    * Use this method to call new activities inside the thread
+
+    */
+
+    public void startNewActivity(){
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent (MainActivity.this, welcome_page.class);
+                startActivity(intent);
+            }
+        });
+
+    }
 
 
     public void postRequest() {
@@ -94,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void run() {
                         try {
+                            startNewActivity();
                             URL url = new URL("https://capstone.devmashru.tech/login");
                             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                             conn.setRequestMethod("POST");
@@ -123,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 Log.d("Validation2", mes);
                                 if (mes.equals("Found user")){
                                     Log.d("Validation","yesss");
+                                    //startNewActivity();
 
                                 }else {
                                     Log.d("Validation", "noooo");

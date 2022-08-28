@@ -35,7 +35,8 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation files('C:\\Users\\shadow\\AndroidStudioProjects\\frontend-master\\app\\libs\\commons-io-2.11.0.jar')
+    //File path for commons.io dont use local jars
+    implementation files('')
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'

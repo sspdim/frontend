@@ -3,13 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Coding/Capstone/app/src/main/res/drawable/avatar_1.xml" value="0.1745" />
+        <entry key="..\:/Coding/Capstone/app/src/main/res/drawable/ic_baseline_alternate_email_24.xml" value="0.1745" />
         <entry key="..\:/Coding/Capstone/app/src/main/res/drawable/ic_baseline_error_outline_24.xml" value="0.2445" />
         <entry key="..\:/Coding/Capstone/app/src/main/res/drawable/ic_baseline_lock_24.xml" value="0.3635" />
         <entry key="..\:/Coding/Capstone/app/src/main/res/drawable/ic_baseline_person_outline_24.xml" value="0.3635" />
         <entry key="..\:/Coding/Capstone/app/src/main/res/drawable/ic_launcher_background.xml" value="0.3635" />
         <entry key="..\:/Coding/Capstone/app/src/main/res/drawable/input_bg.xml" value="0.12" />
+        <entry key="..\:/Coding/Capstone/app/src/main/res/layout-w1240dp/app_bar_main.xml" value="0.25" />
         <entry key="..\:/Coding/Capstone/app/src/main/res/layout/activity_main.xml" value="0.3625" />
         <entry key="..\:/Coding/Capstone/app/src/main/res/layout/activity_user_registration.xml" value="0.3512064343163539" />
+        <entry key="..\:/Coding/Capstone/app/src/main/res/layout/activity_welcome_page.xml" value="0.358695652173913" />
+        <entry key="..\:/Coding/Capstone/app/src/main/res/layout/app_bar_main.xml" value="0.33" />
+        <entry key="..\:/Coding/Capstone/app/src/main/res/menu/bottom_navigation.xml" value="0.3625" />
+        <entry key="..\:/Coding/Capstone/app/src/main/res/menu/navigation_drawer.xml" value="0.3625" />
         <entry key="..\:/Users/shadow/AndroidStudioProjects/frontend-master/app/src/main/res/layout-finger/dashboard.xml" value="0.264" />
         <entry key="..\:/Users/shadow/AndroidStudioProjects/frontend-master/app/src/main/res/layout/activity_main.xml" value="0.2703125" />
         <entry key="..\:/Users/shadow/AndroidStudioProjects/frontend-master/app/src/main/res/layout/activity_main2.xml" value="0.1578125" />
