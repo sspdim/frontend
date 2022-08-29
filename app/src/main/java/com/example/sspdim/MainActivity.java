@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void run() {
                         try {
-                            startNewActivity();
+                            //startNewActivity();
                             URL url = new URL("https://capstone.devmashru.tech/login");
                             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                             conn.setRequestMethod("POST");
@@ -139,14 +139,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 //Gson g = new Gson();
                                 //JSONObject res = g.fromJson(response.toString(), JSONObject.class);
                                 JsonObject res = new Gson().fromJson(response.toString(), JsonObject.class);
-                                Log.d("Validation", res.get("message").toString());
+                                //Log.d("Validation", res.get("message").toString());
                                 String mes = res.get("message").getAsString();
                                 Log.d("Validation2", mes);
+                                //startNewActivity();
                                 if (mes.equals("Found user")){
                                     Log.d("Validation","yesss");
-                                    //startNewActivity();
-
-                                }else {
+                                    startNewActivity();
+                                }else if(mes.equals("Did not find user")){
+                                    //Toast.makeText(getApplicationContext(),"Login UnSuccessfull",Toast.LENGTH_SHORT).show();
                                     Log.d("Validation", "noooo");
                                 }
                             }
@@ -235,9 +236,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 if (validateUsername() && validatePassword() ){
                     postRequest();
-
-                    startActivity(new Intent(this,welcome_page.class));
-
                 }
 
                 break;

@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +13,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
 
@@ -36,6 +41,18 @@ public class UserRegistration extends AppCompatActivity implements View.OnClickL
 
         registerUser = (Button) findViewById(R.id.registerButton);
         registerUser.setOnClickListener(this);
+    }
+    public void startNewActivity(){
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent (UserRegistration.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     public boolean validateUsername(){
@@ -70,17 +87,17 @@ public class UserRegistration extends AppCompatActivity implements View.OnClickL
         Password must contain a length of at least 8 characters and a maximum of 35 characters.
         */
 
-        String passRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,}$";
+        //String passRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,}$";
 
         System.out.println("Before setError...");
         if (pass.length()==0){
             password.setError("Password can't be empty");
             return false;
         }
-        else if (!pass.matches(passRegex)){
-            password.setError("Password is too weak");
-            return false;
-        }
+//        else if (!pass.matches(passRegex)){
+//            password.setError("Password is too weak");
+//            return false;
+//        }
         else if (pass.length()>=35){
             password.setError("Password is too long");
             return false;
@@ -154,6 +171,22 @@ public class UserRegistration extends AppCompatActivity implements View.OnClickL
                                     response.append(responseLine.trim());
                                 }
                                 Log.d("CREATION", response.toString());
+                                JsonObject res = new Gson().fromJson(response.toString(), JsonObject.class);
+                                Log.d("Validation", res.get("message").toString());
+                                String mes = res.get("message").getAsString();
+                                if (mes.equals("Username already taken")){
+
+
+                                }
+                                else if (mes.equals("Registration successful")){
+
+                                    startNewActivity();
+                                    Toast.makeText(getApplicationContext(),"Registration Successfull",Toast.LENGTH_SHORT).show();
+                                }
+                                else if(mes.equals("Registration unsuccessful")){
+
+                                    Toast.makeText(getApplicationContext(),"Registration Unsuccessfull",Toast.LENGTH_SHORT).show();
+                                }
                             }
 
                         } catch (Exception e) {
@@ -176,9 +209,9 @@ public class UserRegistration extends AppCompatActivity implements View.OnClickL
             case R.id.registerButton:
                 if (validateUsername() && validatePassword() ) {
                     postRequest();
-                    Toast.makeText(getApplicationContext(),"Registration Successfull",Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getApplicationContext(),"Please Login",Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(this,MainActivity.class));
+
+                    //Toast.makeText(getApplicationContext(),"Please Login",Toast.LENGTH_SHORT).show();
+                    //startActivity(new Intent(this,MainActivity.class));
                 }
                 //startActivity(new Intent(this, MainActivity.class));
 
