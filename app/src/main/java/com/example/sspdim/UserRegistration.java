@@ -87,17 +87,17 @@ public class UserRegistration extends AppCompatActivity implements View.OnClickL
         Password must contain a length of at least 8 characters and a maximum of 35 characters.
         */
 
-        //String passRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,}$";
+        String passRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,}$";
 
         System.out.println("Before setError...");
         if (pass.length()==0){
             password.setError("Password can't be empty");
             return false;
         }
-//        else if (!pass.matches(passRegex)){
-//            password.setError("Password is too weak");
-//            return false;
-//        }
+        else if (!pass.matches(passRegex)){
+            password.setError("Password is too weak");
+            return false;
+        }
         else if (pass.length()>=35){
             password.setError("Password is too long");
             return false;
