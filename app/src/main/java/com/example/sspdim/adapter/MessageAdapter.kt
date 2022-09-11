@@ -77,4 +77,8 @@ class MessageAdapter(
     override fun getItemCount(): Int {
         return datasource.getMessages().size
     }
+
+    override fun getItemViewType(position: Int): Int {
+        return datasource.getMessages()[position].userId
+    }
 }

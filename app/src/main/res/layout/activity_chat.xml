@@ -8,19 +8,6 @@
     android:background="@drawable/background"
     tools:context=".UserRegistration">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-light"
-        android:text="@string/title_friend_name"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textSize="34sp"
-        android:background="@color/purple_200"
-        android:padding="4dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
@@ -30,6 +17,19 @@
         app:layout_constraintBottom_toTopOf="@+id/enter_message_text_input">
 
     </androidx.recyclerview.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_200"
+        android:fontFamily="sans-serif-light"
+        android:padding="4dp"
+        android:text="@string/title_friend_name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="34sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/enter_message_text_input"

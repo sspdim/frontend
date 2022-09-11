@@ -27,8 +27,8 @@ class ChatInterface : AppCompatActivity() {
             val textInput = findViewById<TextView>(R.id.enter_message_text_input)
             val msg = textInput.text.toString()
             if(msg.isNotEmpty()) {
-                datasource.addMessage("You: $msg", TYPE_MY_MESSAGE)
-                datasource.addMessage("Friend: $msg", TYPE_FRIEND_MESSAGE)
+                datasource.addMessage(msg, TYPE_MY_MESSAGE)
+                datasource.addMessage(msg, TYPE_FRIEND_MESSAGE)
                 messageAdapter.notifyDataSetChanged()
                 textInput.text = ""
             }
