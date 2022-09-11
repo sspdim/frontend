@@ -3,4 +3,5 @@
     <string name="welcome">Welcome!</string>
     <string name="send">Send</string>
     <string name="enter_message">Enter your message</string>
+    <string name="title_friend_name">Friend\'s Name</string>
 </resources>

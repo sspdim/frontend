@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var username: EditText? = null
     private var uname: String? = null
     private var pass: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -93,14 +94,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         return res[0]
     }
 
-    // Sending the JSON object
-    /*       try
-        {
-
-
-
-        }
-*/
     fun validateUsername(): Boolean {
         username = findViewById<View>(R.id.username) as EditText
         uname = username!!.text.toString()
@@ -158,5 +151,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
             R.id.registerButton -> {}
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val usernameField = findViewById<EditText>(R.id.username)
+        val passwordField = findViewById<EditText>(R.id.password)
+        usernameField.setText("")
+        passwordField.setText("")
     }
 }
