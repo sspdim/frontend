@@ -10,6 +10,7 @@ import android.content.Intent
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import org.json.JSONException
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -84,6 +85,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     }
                     Log.d("CREATION", response.toString())
                     res[0] = JSONObject(response.toString())
+                    runOnUiThread {
+                        try {
+                            Toast.makeText(
+                                applicationContext,
+                                res[0].getString("message"),
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } catch (e: JSONException) {
+                            Toast.makeText(applicationContext, "Error", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                    Log.d("MainActivity", res[0].getString("message"))
                 }
             } catch (e: Exception) {
                 println(e)

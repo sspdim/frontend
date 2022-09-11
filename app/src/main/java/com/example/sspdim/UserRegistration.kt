@@ -169,4 +169,14 @@ class UserRegistration : AppCompatActivity(), View.OnClickListener {
             e.printStackTrace()
         }
     }
+
+    override fun onStart() {
+        super.onStart()
+        val usernameField = findViewById<EditText>(R.id.username)
+        val passwordField = findViewById<EditText>(R.id.password)
+        val confirmPasswordField = findViewById<EditText>(R.id.confirmPassword)
+        usernameField.setText("")
+        passwordField.setText("")
+        confirmPasswordField.setText("")
+    }
 }
