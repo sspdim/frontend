@@ -1,4 +1,4 @@
-package com.example.sspdim.adapter
+package com.example.sspdim.model
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sspdim.R
-import com.example.sspdim.data.DataSource
-import com.example.sspdim.model.Message
 import com.example.sspdim.model.Message.Companion.TYPE_FRIEND_MESSAGE
 import com.example.sspdim.model.Message.Companion.TYPE_MY_MESSAGE
 
@@ -16,10 +14,6 @@ class MessageAdapter(
     private val context: Context,
     private val datasource: DataSource
     ) : RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
-
-    /*class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-        val textview: TextView =view.findViewById(R.id.item_content)
-    }*/
 
     abstract class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         abstract fun bind(item: Message)
@@ -39,21 +33,6 @@ class MessageAdapter(
             messageContent.text = item.content
         }
     }
-
-    /* override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        val adapterLayout =LayoutInflater.from(parent.context)
-            .inflate(R.layout.list_item, parent, false)
-        return ItemViewHolder(adapterLayout)
-    }
-
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val item = datasource.getMessages()[position]
-        holder.textview.text = item.content
-    }
-
-    override fun getItemCount(): Int {
-        return datasource.getMessages().size
-    } */
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
         val context = parent.context

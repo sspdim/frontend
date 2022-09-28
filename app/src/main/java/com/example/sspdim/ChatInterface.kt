@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.sspdim.adapter.MessageAdapter
-import com.example.sspdim.data.DataSource
+import com.example.sspdim.model.MessageAdapter
+import com.example.sspdim.model.DataSource
 import com.example.sspdim.model.Message.Companion.TYPE_FRIEND_MESSAGE
 import com.example.sspdim.model.Message.Companion.TYPE_MY_MESSAGE
 

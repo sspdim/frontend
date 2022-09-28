@@ -1,4 +1,4 @@
-package com.example.sspdim.data
+package com.example.sspdim.model
 
 import com.example.sspdim.model.Message
 
