@@ -10,10 +10,21 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.sspdim.databinding.FragmentLoginBinding
+import com.example.sspdim.model.LoginRegisterViewModel
+import com.example.sspdim.network.LoginRegisterRequest
+import com.example.sspdim.network.Response
+import com.example.sspdim.network.Response.Companion.STATUS_SUCCESS
+import com.example.sspdim.network.SspdimApi
 import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -23,37 +34,33 @@ import java.lang.StringBuilder
 import java.net.HttpURLConnection
 import java.net.URL
 
-class LoginFragment(): Fragment() {
-    private lateinit var register: TextView
-    private var login: Button? = null
-    private lateinit var password: EditText
-    private lateinit var username: EditText
-    private lateinit var uname: String
-    private lateinit var pass: String
+private const val TAG = "LoginFragment"
+
+class LoginFragment: Fragment() {
+    private val viewModel: LoginRegisterViewModel by viewModels()
 
     private var _binding: FragmentLoginBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentLoginBinding
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        binding = _binding!!
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        register = binding.registerLink
-        register.setOnClickListener {
+        binding.registerLink.setOnClickListener {
             onClickRegister()
         }
-        login = binding.loginButton
-        (login as MaterialButton).setOnClickListener {
+        binding.loginButton.setOnClickListener {
             onClickLogin()
         }
-        username = binding.username
-        password = binding.password
+        binding.username.doOnTextChanged { text, _, _, _ ->
+            viewModel.username = text.toString()
+        }
+        binding.password.doOnTextChanged { text, _, _, _ ->
+            viewModel.password = text.toString()
+        }
     }
 
     override fun onDestroyView() {
@@ -61,6 +68,23 @@ class LoginFragment(): Fragment() {
         _binding = null
     }
 
+    private fun submitLoginDetails(): Response? {
+        val request = LoginRegisterRequest(viewModel.username, viewModel.password)
+        var response: Response? = null
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                Log.d(TAG, "sending request")
+                response = SspdimApi.retrofitService.submitLogin(request)
+                Log.d(TAG, "received response")
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        return response
+    }
+
+    /*
     @Throws(InterruptedException::class)
     fun postRequest(): JSONObject {
 
@@ -126,32 +150,23 @@ class LoginFragment(): Fragment() {
         thread.join()
         return res[0]
     }
+    */
 
-    fun validateUsername(): Boolean {
-        username = binding.username
-        uname = username.text.toString()
-
-        return if (uname.length == 0) {
-            username.error = "Field cant be empty"
-            false
+    private fun setError(): Boolean {
+        if (viewModel.username.isEmpty()) {
+            binding.username.error = "Field cant be empty"
+            return true
         } else {
-            username.error = null
-            true
+            binding.username.error = null
         }
-    }
 
-    fun validatePassword(): Boolean {
-        password = binding.password
-        pass = password.text.toString()
-
-        println("Before setError...")
-        return if (pass.isEmpty()) {
-            password.error = "Field can't be empty."
-            false
+        if (viewModel.password.isEmpty()) {
+            binding.password.error = "Field can't be empty."
+            return true
         } else {
-            password.error = null
-            true
+            binding.password.error = null
         }
+        return false
     }
 
     private fun onClickRegister() {
@@ -159,26 +174,36 @@ class LoginFragment(): Fragment() {
     }
 
     private fun onClickLogin() {
-        var response = JSONObject()
-        if (validateUsername() && validatePassword()) {
+        val username = binding.username.text.toString()
+        val password = binding.password.text.toString()
+        viewModel.initData(username, password)
+
+        if (!setError()) {
+            viewModel.submitLoginDetails()
+            if (viewModel.status > 0) {
+                try {
+                    Toast.makeText(
+                        requireContext(),
+                        viewModel.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                } catch (e: JSONException) {
+                    Toast.makeText(requireContext(), "Error", Toast.LENGTH_LONG).show()
+                }
+            }
             try {
-                response = postRequest()
-            } catch (e: InterruptedException) {
+                if (viewModel.status == STATUS_SUCCESS) {
+                    startActivity(Intent(requireContext(), ChatInterface::class.java))
+                }
+            } catch (e: JSONException) {
                 e.printStackTrace()
             }
-        }
-        try {
-            if (response.getInt("status") == 200) {
-                startActivity(Intent(requireContext(), ChatInterface::class.java))
-            }
-        } catch (e: JSONException) {
-            e.printStackTrace()
         }
     }
 
     override fun onStart() {
         super.onStart()
-        username.setText("")
-        password.setText("")
+        binding.username.setText(viewModel.username)
+        binding.password.setText(viewModel.password)
     }
 }

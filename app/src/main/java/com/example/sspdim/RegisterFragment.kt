@@ -1,6 +1,7 @@
 package com.example.sspdim
 
 import android.content.Intent
+import android.nfc.Tag
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,9 +10,20 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat.startActivity
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.example.sspdim.databinding.FragmentLoginBinding
 import com.example.sspdim.databinding.FragmentRegisterBinding
+import com.example.sspdim.model.LoginRegisterViewModel
+import com.example.sspdim.network.LoginRegisterRequest
+import com.example.sspdim.network.Response
+import com.example.sspdim.network.SspdimApi
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -21,35 +33,32 @@ import java.lang.StringBuilder
 import java.net.HttpURLConnection
 import java.net.URL
 
+private const val TAG = "RegisterFragment"
+
 class RegisterFragment(): Fragment() {
-    private lateinit var registerUser: Button
-    private lateinit var password: EditText
-    private lateinit var username: EditText
-    private lateinit var confirmPass: EditText
-    private lateinit var uname: String
-    private lateinit var pass: String
-    private lateinit var pass2: String
+    private val viewModel: LoginRegisterViewModel by viewModels()
 
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentRegisterBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        registerUser = binding.registerButton
-        registerUser.setOnClickListener {
+        binding.registerButton.setOnClickListener {
             onSubmit()
         }
-        username = binding.username
-        password = binding.password
-        confirmPass = binding.confirmPassword
+        binding.username.doOnTextChanged { text, _, _, _ ->
+            viewModel.username = text.toString()
+        }
+        binding.password.doOnTextChanged { text, _, _, _ ->
+            viewModel.password = text.toString()
+        }
+        binding.confirmPassword.doOnTextChanged {text, _, _, _ ->
+            viewModel.confirmPassword = text.toString()
+        }
     }
 
     override fun onDestroyView() {
@@ -57,25 +66,44 @@ class RegisterFragment(): Fragment() {
         _binding = null
     }
 
-    private fun validateUsername(): Boolean {
-        username = binding.username
-        uname = username!!.text.toString()
-        return if (uname!!.isEmpty()) {
-            username!!.error = "Field cant be empty"
-            false
+    private fun setError(): Boolean {
+        val passRegex = Regex("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,}$")
+
+        if (viewModel.username.isEmpty()) {
+            binding.username.error = "Field cant be empty"
+            return true
         } else {
-            username!!.error = null
-            true
+            binding.username.error = null
         }
+
+        if (viewModel.password.isEmpty()) {
+            binding.password.error = "Field can't be empty."
+            return true
+        } else {
+            binding.password.error = null
+        }
+
+        if (viewModel.password.isEmpty()) {
+            binding.password.error = "Password can't be empty"
+            return false
+        }
+        else if (!viewModel.password.matches(passRegex)) {
+            binding.password.error = "Password is too weak"
+            return false
+        } else if (viewModel.password.length >= 35) {
+            binding.password.error = "Password is too long"
+            return false
+        } else if (viewModel.password != viewModel.confirmPassword) {
+            binding.password.error = "Passwords don't match"
+            return false
+        } else {
+            binding.password.error = null
+        }
+        return true
     }
 
+    /*
     private fun validatePassword(): Boolean {
-        password = binding.password
-        confirmPass = binding.confirmPassword
-        pass = password!!.text.toString()
-        pass2 = confirmPass!!.text.toString()
-
-        val passRegex = Regex("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,}$")
         println("Before setError...")
         return if (pass!!.isEmpty()) {
             password!!.error = "Password can't be empty"
@@ -94,7 +122,27 @@ class RegisterFragment(): Fragment() {
             true
         }
     }
+    private fun submitRegisterDetails(): Response? {
+        pass = password!!.text.toString()
+        uname = username!!.text.toString()
+        val request = LoginRegisterRequest(uname, pass)
+        var response: Response? = null
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                Log.d(TAG, "sending request")
+                response = SspdimApi.retrofitService.submitRegister(request)
+                Log.d(TAG, "received response")
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        return response
+    }
+    */
 
+
+    /*
     @Throws(InterruptedException::class)
     fun postRequest(): JSONObject {
 
@@ -159,30 +207,40 @@ class RegisterFragment(): Fragment() {
         thread.join()
         return res[0]
     }
+     */
 
     private fun onSubmit() {
-        var response = JSONObject()
-        if (validateUsername() && validatePassword()) {
+        val username = binding.username.text.toString()
+        val password = binding.password.text.toString()
+        viewModel.initData(username, password)
+
+        if (!setError()) {
+            viewModel.submitRegisterDetails()
+            if (viewModel.status > 0) {
+                try {
+                    Toast.makeText(
+                        requireContext(),
+                        viewModel.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                } catch (e: JSONException) {
+                    Toast.makeText(requireContext(), "Error", Toast.LENGTH_LONG).show()
+                }
+            }
             try {
-                response = postRequest()
-            } catch (e: InterruptedException) {
+                if (viewModel.status == Response.STATUS_SUCCESS) {
+                    startActivity(Intent(requireContext(), ChatInterface::class.java))
+                }
+            } catch (e: JSONException) {
                 e.printStackTrace()
             }
-        }
-        try {
-            if (response.getInt("status") == 200) {
-                startActivity(Intent(requireContext(), ChatInterface::class.java))
-            }
-        }
-        catch (e: JSONException) {
-            e.printStackTrace()
         }
     }
 
     override fun onStart() {
         super.onStart()
-        username.setText("")
-        password.setText("")
-        confirmPass.setText("")
+        binding.username.setText(viewModel.username)
+        binding.password.setText(viewModel.password)
+        binding.confirmPassword.setText(viewModel.confirmPassword)
     }
 }
