@@ -16,7 +16,7 @@
         android:id="@+id/trial"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/loginButton"
+        android:layout_below="@+id/login_next_button"
         android:layout_marginTop="80dp"
         android:hint="Username"
         android:layout_marginLeft="20dp"
@@ -84,7 +84,7 @@
         />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/loginButton"
+        android:id="@+id/login_next_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/password"
@@ -94,14 +94,14 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:backgroundTint="@color/teal_200"
-        android:text="Login"
+        android:text="Next"
         android:textSize="15dp" />
 
     <TextView
         android:id="@+id/registerLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/loginButton"
+        android:layout_below="@+id/login_next_button"
         android:layout_alignParentRight="true"
         android:layout_marginTop="16dp"
         android:layout_marginRight="35dp"
@@ -115,7 +115,7 @@
         android:id="@+id/forgotPassLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/loginButton"
+        android:layout_below="@+id/login_next_button"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="35dp"
         android:layout_marginTop="16dp"

@@ -8,14 +8,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.sspdim.databinding.FragmentRegisterBinding
 import com.example.sspdim.model.LoginRegisterViewModel
+import com.example.sspdim.model.RegisterViewModel
 import com.example.sspdim.network.Response
 import org.json.JSONException
 
 class RegisterFragment(): Fragment() {
-    private val viewModel: LoginRegisterViewModel by viewModels()
+    private val viewModel: RegisterViewModel by activityViewModels()
 
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
@@ -26,16 +29,16 @@ class RegisterFragment(): Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.registerButton.setOnClickListener {
-            onSubmit()
+        binding.registerNextButton.setOnClickListener {
+            onClickNext()
         }
-        binding.username.doOnTextChanged { text, _, _, _ ->
+        binding.registerUsername.doOnTextChanged { text, _, _, _ ->
             viewModel.username = text.toString()
         }
-        binding.password.doOnTextChanged { text, _, _, _ ->
+        binding.registerPassword.doOnTextChanged { text, _, _, _ ->
             viewModel.password = text.toString()
         }
-        binding.confirmPassword.doOnTextChanged {text, _, _, _ ->
+        binding.registerConfirmPassword.doOnTextChanged {text, _, _, _ ->
             viewModel.confirmPassword = text.toString()
         }
     }
@@ -49,42 +52,43 @@ class RegisterFragment(): Fragment() {
         val passRegex = Regex("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–{}:;',?/*~$^+=<>]).{8,}$")
 
         if (viewModel.username.isEmpty()) {
-            binding.username.error = "Field cant be empty"
+            binding.registerUsername.error = "Field cant be empty"
             return true
         } else {
-            binding.username.error = null
+            binding.registerUsername.error = null
         }
 
         if (viewModel.password.isEmpty()) {
-            binding.password.error = "Field can't be empty."
+            binding.registerPassword.error = "Field can't be empty."
             return true
         } else {
-            binding.password.error = null
+            binding.registerPassword.error = null
         }
 
         if (viewModel.password.isEmpty()) {
-            binding.password.error = "Password can't be empty"
-            return false
+            binding.registerPassword.error = "Password can't be empty"
+            return true
         }
         else if (!viewModel.password.matches(passRegex)) {
-            binding.password.error = "Password is too weak"
-            return false
+            binding.registerPassword.error = "Password is too weak"
+            return true
         } else if (viewModel.password.length >= 35) {
-            binding.password.error = "Password is too long"
-            return false
+            binding.registerPassword.error = "Password is too long"
+            return true
         } else if (viewModel.password != viewModel.confirmPassword) {
-            binding.password.error = "Passwords don't match"
-            return false
+            binding.registerPassword.error = "Passwords don't match"
+            return true
         } else {
-            binding.password.error = null
+            binding.registerPassword.error = null
         }
-        return true
+        return false
     }
-
+/*
     private fun onSubmit() {
         val username = binding.username.text.toString()
         val password = binding.password.text.toString()
-        viewModel.initData(username, password)
+
+//        viewModel.initData(username, password)
 
         if (!setError()) {
             viewModel.submitRegisterDetails()
@@ -109,10 +113,23 @@ class RegisterFragment(): Fragment() {
         }
     }
 
+ */
+
+    private fun onClickNext()  {
+        val username = binding.registerUsername.text.toString()
+        val password = binding.registerPassword.text.toString()
+        val confirmPassword = binding.registerConfirmPassword.text.toString()
+        viewModel.initData(username, password, confirmPassword)
+
+        if (!setError()) {
+            findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToRegisterServerListFragment())
+        }
+    }
+
     override fun onStart() {
         super.onStart()
-        binding.username.setText(viewModel.username)
-        binding.password.setText(viewModel.password)
-        binding.confirmPassword.setText(viewModel.confirmPassword)
+        binding.registerUsername.setText(viewModel.username)
+        binding.registerPassword.setText(viewModel.password)
+        binding.registerConfirmPassword.setText(viewModel.confirmPassword)
     }
 }

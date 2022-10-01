@@ -5,10 +5,11 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
 
-private const val BASE_URL = "https://capstone.devmashru.tech"
+private var BASE_URL = "https://capstone1.devmashru.tech"
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()
@@ -23,7 +24,14 @@ object SspdimApi {
     }
 }
 
+fun setBaseUrl(url: String) {
+    BASE_URL = url
+}
+
 interface SspdimApiService {
+
+    @GET("getserverslist")
+    suspend fun getServersList(): List<Server>
 
     @Headers("Content-Type: application/json")
     @POST("login")

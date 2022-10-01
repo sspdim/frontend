@@ -8,15 +8,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.sspdim.databinding.FragmentLoginBinding
-import com.example.sspdim.model.LoginRegisterViewModel
+import com.example.sspdim.model.LoginViewModel
+import com.example.sspdim.network.Response
 import com.example.sspdim.network.Response.Companion.STATUS_SUCCESS
 import org.json.JSONException
 
 class LoginFragment: Fragment() {
-    private val viewModel: LoginRegisterViewModel by viewModels()
+    private val viewModel: LoginViewModel by activityViewModels()
 
     private var _binding: FragmentLoginBinding? = null
     private lateinit var binding: FragmentLoginBinding
@@ -31,8 +32,8 @@ class LoginFragment: Fragment() {
         binding.registerLink.setOnClickListener {
             onClickRegister()
         }
-        binding.loginButton.setOnClickListener {
-            onClickLogin()
+        binding.loginNextButton.setOnClickListener {
+            onClickNext()
         }
         binding.username.doOnTextChanged { text, _, _, _ ->
             viewModel.username = text.toString()
@@ -65,34 +66,16 @@ class LoginFragment: Fragment() {
     }
 
     private fun onClickRegister() {
-        findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
+        startActivity(Intent(requireContext(), RegisterActivity::class.java))
     }
 
-    private fun onClickLogin() {
+    private fun onClickNext() {
         val username = binding.username.text.toString()
         val password = binding.password.text.toString()
         viewModel.initData(username, password)
 
         if (!setError()) {
-            viewModel.submitLoginDetails()
-            if (viewModel.status > 0) {
-                try {
-                    Toast.makeText(
-                        requireContext(),
-                        viewModel.message,
-                        Toast.LENGTH_LONG
-                    ).show()
-                } catch (e: JSONException) {
-                    Toast.makeText(requireContext(), "Error", Toast.LENGTH_LONG).show()
-                }
-            }
-            try {
-                if (viewModel.status == STATUS_SUCCESS) {
-                    startActivity(Intent(requireContext(), ChatInterface::class.java))
-                }
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
+            findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToLoginServerListFragment())
         }
     }
 

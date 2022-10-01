@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -24,23 +25,9 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
-    private lateinit var navController: NavController
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        val binding = ActivityMainBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.navController
+        startActivity(Intent(this, LoginActivity::class.java))
     }
-
-//    override fun onStart() {
-//        super.onStart()
-//        val usernameField = findViewById<EditText>(R.id.username)
-//        val passwordField = findViewById<EditText>(R.id.password)
-//        usernameField.setText("")
-//        passwordField.setText("")
-//    }
 }
