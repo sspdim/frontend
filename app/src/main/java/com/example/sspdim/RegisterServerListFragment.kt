@@ -9,15 +9,20 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import com.example.sspdim.data.SettingsDataStore
 import com.example.sspdim.databinding.FragmentRegisterServerListBinding
 import com.example.sspdim.model.RegisterViewModel
 import com.example.sspdim.model.ServerListAdapter
 import com.example.sspdim.network.Response
 import com.example.sspdim.network.setBaseUrl
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.json.JSONException
 
 class RegisterServerListFragment: Fragment() {
+
+    private lateinit var settingsDataStore: SettingsDataStore
 
     private val viewModel: RegisterViewModel by activityViewModels()
 
@@ -36,6 +41,11 @@ class RegisterServerListFragment: Fragment() {
         viewModel.getServerDetails()
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        settingsDataStore = SettingsDataStore(requireContext())
     }
 
     private fun onClickRegister() {
@@ -58,6 +68,9 @@ class RegisterServerListFragment: Fragment() {
         }
         try {
             if (viewModel.status == Response.STATUS_SUCCESS) {
+                lifecycleScope.launch {
+                settingsDataStore.saveLoggedInPreference(true, requireContext())
+            }
                 startActivity(Intent(requireContext(), ChatInterface::class.java))
             }
             else {

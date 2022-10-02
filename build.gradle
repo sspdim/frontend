@@ -11,6 +11,7 @@ buildscript {
         material_version = '1.6.1'
         nav_version = '2.5.2'
         room_version = '2.4.3'
+        datastore_version = "1.0.0"
     }
     repositories {
         google()
