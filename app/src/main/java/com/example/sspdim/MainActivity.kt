@@ -18,10 +18,14 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.sspdim.data.SettingsDataStore
 import com.example.sspdim.databinding.ActivityMainBinding
+import com.example.sspdim.network.AddFirebaseTokenRequest
+import com.example.sspdim.network.SspdimApi
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.json.JSONException
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -51,7 +55,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             val token = task.result
 
             Log.d("MainActivity", "Token = [$token]")
-//            Toast.makeText(baseContext, "Token = [$token]", Toast.LENGTH_SHORT).show()
+            val request = AddFirebaseTokenRequest("tusr", token)
+            runBlocking {
+                launch {
+                    val response = SspdimApi.retrofitService.addToken(request)
+                    Log.d("NewToken", "[${response.status}] ${response.message}")
+                }
+            }
         })
 
         startActivity(Intent(this, LoginActivity::class.java))

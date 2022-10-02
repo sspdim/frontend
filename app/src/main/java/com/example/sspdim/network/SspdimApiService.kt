@@ -30,7 +30,7 @@ fun setBaseUrl(url: String) {
 
 interface SspdimApiService {
 
-    @GET("getserverslist")
+    @GET("get-servers-list")
     suspend fun getServersList(): List<Server>
 
     @Headers("Content-Type: application/json")
@@ -40,5 +40,9 @@ interface SspdimApiService {
     @Headers("Content-Type: application/json")
     @POST("register")
     suspend fun submitRegister(@Body requestData: LoginRegisterRequest): Response
+
+    @Headers("Content-Type: application/json")
+    @POST("add-token")
+    suspend fun addToken(@Body requestData: AddFirebaseTokenRequest): Response
 }
 
