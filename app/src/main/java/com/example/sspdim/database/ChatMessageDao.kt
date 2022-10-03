@@ -17,7 +17,7 @@ interface ChatMessageDao {
     @Update
     suspend fun update(chatMessage: ChatMessage)
 
-    @Query("select * from chats where friend_id = :friendId order by timestamp asc")
+    @Query("select * from chats where friend_username = :friendId order by timestamp asc")
     fun getFriendMessages(friendId: String): Flow<List<ChatMessage>>
 
     @Query("select * from chats where status = $MESSAGE_SENT")

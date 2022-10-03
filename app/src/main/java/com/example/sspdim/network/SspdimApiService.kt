@@ -44,5 +44,9 @@ interface SspdimApiService {
     @Headers("Content-Type: application/json")
     @POST("add-token")
     suspend fun addToken(@Body requestData: AddFirebaseTokenRequest): Response
+
+    // TODO("Send message request")
+
+    // TODO("Receive message request")
 }
 
