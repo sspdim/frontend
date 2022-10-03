@@ -9,7 +9,7 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
 
-private var BASE_URL = "https://capstone1.devmashru.tech"
+private var BASE_URL = "https://capstone.devmashru.tech"
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()
@@ -45,7 +45,9 @@ interface SspdimApiService {
     @POST("add-token")
     suspend fun addToken(@Body requestData: AddFirebaseTokenRequest): Response
 
-    // TODO("Send message request")
+    @Headers("Content-Type: application/json")
+    @POST("message")
+    suspend fun sendMessage(@Body requestData: SendMessageRequest): Response
 
     // TODO("Receive message request")
 }
