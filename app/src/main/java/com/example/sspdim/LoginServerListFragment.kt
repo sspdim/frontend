@@ -48,7 +48,7 @@ class LoginServerListFragment: Fragment() {
     }
 
     private fun onClickLogin() {
-        viewModel.servers.value?.get(0)?.let { setBaseUrl("https://" + it.domainName) }
+        setBaseUrl("https://" + viewModel.server)
         viewModel.submitLoginDetails()
         if (viewModel.status > 0) {
             try {
@@ -65,6 +65,8 @@ class LoginServerListFragment: Fragment() {
             if (viewModel.status == Response.STATUS_SUCCESS) {
                 lifecycleScope.launch {
                     settingsDataStore.saveLoggedInPreference(true, requireContext())
+                    settingsDataStore.saveUsernamePreference(viewModel.username, requireContext())
+                    settingsDataStore.saveServerPreference(viewModel.server, requireContext())
                 }
                 startActivity(Intent(requireContext(), ChatInterface::class.java))
             }

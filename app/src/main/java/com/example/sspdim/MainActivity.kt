@@ -43,27 +43,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if(!checkGooglePlayServices()) {
-            Log.w(TAG, "Device does not have Google Play Services")
-        }
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.w("MainActivity", "Fetching failed", task.exception)
-                return@OnCompleteListener
-            }
-
-            val token = task.result
-
-            Log.d("MainActivity", "Token = [$token]")
-            val request = AddFirebaseTokenRequest("tusr", token)
-            runBlocking {
-                launch {
-                    val response = SspdimApi.retrofitService.addToken(request)
-                    Log.d("NewToken", "[${response.status}] ${response.message}")
-                }
-            }
-        })
-
 //        startActivity(Intent(this, MainActivity2::class.java))
         Log.d("MainActivity", "Sent token; moving to launch fragment")
 
@@ -80,16 +59,4 @@ class MainActivity : AppCompatActivity() {
 //    override fun onSupportNavigateUp(): Boolean {
 //        return navController.navigateUp() || super.onSupportNavigateUp()
 //    }
-
-    private fun checkGooglePlayServices(): Boolean {
-        val status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
-        return if (status != ConnectionResult.SUCCESS) {
-            Log.e(TAG, "error")
-            false
-        }
-        else {
-            Log.i(TAG, "Google play services updated")
-            true
-        }
-    }
 }

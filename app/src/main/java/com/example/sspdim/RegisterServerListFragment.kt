@@ -17,7 +17,6 @@ import com.example.sspdim.model.ServerListAdapter
 import com.example.sspdim.network.Response
 import com.example.sspdim.network.setBaseUrl
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.json.JSONException
 
 class RegisterServerListFragment: Fragment() {
@@ -49,10 +48,7 @@ class RegisterServerListFragment: Fragment() {
     }
 
     private fun onClickRegister() {
-        viewModel.servers.value?.get(0)?.let { setBaseUrl("https://" + it.domainName) }
-//        runBlocking {
-//            viewModel.submitRegisterDetails()
-//        }
+        setBaseUrl("https://" + viewModel.server)
         viewModel.submitRegisterDetails()
         Log.d("srg", "${viewModel.status}, ${viewModel.message}; ${viewModel.response?.message}, ${viewModel.response?.status}")
         if (viewModel.status > 0) {
@@ -69,8 +65,10 @@ class RegisterServerListFragment: Fragment() {
         try {
             if (viewModel.status == Response.STATUS_SUCCESS) {
                 lifecycleScope.launch {
-                settingsDataStore.saveLoggedInPreference(true, requireContext())
-            }
+                    settingsDataStore.saveLoggedInPreference(true, requireContext())
+                    settingsDataStore.saveUsernamePreference(viewModel.username, requireContext())
+                    settingsDataStore.saveServerPreference(viewModel.server, requireContext())
+                }
                 startActivity(Intent(requireContext(), ChatInterface::class.java))
             }
             else {

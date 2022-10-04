@@ -25,7 +25,7 @@ class RegisterViewModel: ViewModel() {
     val servers: LiveData<List<Server>> = _servers
 
     private val _server = MutableLiveData<Server>()
-    val server: LiveData<Server> = _server
+    val server: String = "capstone1.devmashru.tech"
 
     fun initData(username: String, password: String, confirmPassword: String) {
         this.username = username
@@ -49,16 +49,6 @@ class RegisterViewModel: ViewModel() {
                 }
             }
         }
-//        viewModelScope.launch {
-//            try {
-//                response = SspdimApi.retrofitService.submitRegister(request)
-//                status = response!!.status
-//                message = response!!.message
-//            }
-//            catch (e: Exception) {
-//                e.printStackTrace()
-//            }
-//        }
     }
 
     fun getServerDetails() {
