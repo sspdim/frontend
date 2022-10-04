@@ -7,12 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.asLiveData
 import com.example.sspdim.data.SettingsDataStore
 import com.example.sspdim.databinding.FragmentMainBinding
-import com.example.sspdim.model.MainViewModel
-import com.example.sspdim.model.MainViewModelFactory
 import com.example.sspdim.network.AddFirebaseTokenRequest
 import com.example.sspdim.network.SspdimApi
 import com.google.android.gms.common.ConnectionResult
@@ -30,19 +27,13 @@ class MainFragment: Fragment() {
 
     private lateinit var settingsDataStore: SettingsDataStore
 
-    private val viewModel: MainViewModel by activityViewModels {
-        MainViewModelFactory(
-            (activity?.application as SspdimApplication).database.preferenceDao()
-        )
-    }
-
     private lateinit var binding: FragmentMainBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         Log.d(TAG, "onCreateView")
         binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root

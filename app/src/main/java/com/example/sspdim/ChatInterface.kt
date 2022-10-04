@@ -16,11 +16,6 @@ import com.squareup.moshi.Json
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-data class Response (
-    @Json(name = "status") val status: Int,
-    @Json(name = "message") val message: String
-)
-
 class ChatInterface : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

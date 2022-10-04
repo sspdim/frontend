@@ -1,21 +1,15 @@
 package com.example.sspdim
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.sspdim.databinding.FragmentRegisterBinding
-import com.example.sspdim.model.LoginRegisterViewModel
 import com.example.sspdim.model.RegisterViewModel
-import com.example.sspdim.network.Response
-import org.json.JSONException
 
 class RegisterFragment(): Fragment() {
     private val viewModel: RegisterViewModel by activityViewModels()
@@ -83,37 +77,6 @@ class RegisterFragment(): Fragment() {
         }
         return false
     }
-/*
-    private fun onSubmit() {
-        val username = binding.username.text.toString()
-        val password = binding.password.text.toString()
-
-//        viewModel.initData(username, password)
-
-        if (!setError()) {
-            viewModel.submitRegisterDetails()
-            if (viewModel.status > 0) {
-                try {
-                    Toast.makeText(
-                        requireContext(),
-                        viewModel.message,
-                        Toast.LENGTH_LONG
-                    ).show()
-                } catch (e: JSONException) {
-                    Toast.makeText(requireContext(), "Error", Toast.LENGTH_LONG).show()
-                }
-            }
-            try {
-                if (viewModel.status == Response.STATUS_SUCCESS) {
-                    startActivity(Intent(requireContext(), ChatInterface::class.java))
-                }
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-        }
-    }
-
- */
 
     private fun onClickNext()  {
         val username = binding.registerUsername.text.toString()
