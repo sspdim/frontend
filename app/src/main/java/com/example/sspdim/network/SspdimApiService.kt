@@ -1,5 +1,6 @@
 package com.example.sspdim.network
 
+import com.squareup.moshi.Json
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
@@ -9,7 +10,7 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
 
-private var BASE_URL = "https://capstone.devmashru.tech"
+private var BASE_URL = "https://capstone1.devmashru.tech"
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()
@@ -23,6 +24,10 @@ object SspdimApi {
         retrofit.create(SspdimApiService::class.java)
     }
 }
+
+data class Response2 (
+    @Json(name = "status") val status: Int
+)
 
 fun setBaseUrl(url: String) {
     BASE_URL = url
@@ -47,7 +52,7 @@ interface SspdimApiService {
 
     @Headers("Content-Type: application/json")
     @POST("message")
-    suspend fun sendMessage(@Body requestData: SendMessageRequest): Response
+    suspend fun sendMessage(@Body requestData: SendMessageRequest): Response2
 
     // TODO("Receive message request")
 }

@@ -36,8 +36,8 @@ import java.net.URL
 
 private const val TAG = "MainActivity"
 
-class MainActivity : AppCompatActivity(R.layout.activity_main) {
-    private lateinit var navController: NavController
+class MainActivity : AppCompatActivity() {
+//    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,12 +64,22 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             }
         })
 
-        startActivity(Intent(this, LoginActivity::class.java))
+//        startActivity(Intent(this, MainActivity2::class.java))
+        Log.d("MainActivity", "Sent token; moving to launch fragment")
 
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.main_nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.navController
+//        val navHostFragment = supportFragmentManager
+//            .findFragmentById(R.id.main_nav_host_fragment) as NavHostFragment
+//        navController = navHostFragment.navController
+
+//        supportFragmentManager.beginTransaction().replace(R.id.main_nav_host_fragment, MainFragment()).commit()
+
+//        setupActionBarWithNavController(navController)
+
     }
+
+//    override fun onSupportNavigateUp(): Boolean {
+//        return navController.navigateUp() || super.onSupportNavigateUp()
+//    }
 
     private fun checkGooglePlayServices(): Boolean {
         val status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)

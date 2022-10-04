@@ -6,8 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "preferences")
 data class Preference(
-        @PrimaryKey
-        val key: String,
-        @ColumnInfo
+        @PrimaryKey(autoGenerate = false)
+        val preference: String,
         val value: String
 )

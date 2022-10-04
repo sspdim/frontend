@@ -10,11 +10,16 @@ import com.example.sspdim.model.MessageAdapter
 import com.example.sspdim.model.DataSource
 import com.example.sspdim.model.Message.Companion.TYPE_FRIEND_MESSAGE
 import com.example.sspdim.model.Message.Companion.TYPE_MY_MESSAGE
-import com.example.sspdim.network.AddFirebaseTokenRequest
 import com.example.sspdim.network.SendMessageRequest
 import com.example.sspdim.network.SspdimApi
+import com.squareup.moshi.Json
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+
+data class Response (
+    @Json(name = "status") val status: Int,
+    @Json(name = "message") val message: String
+)
 
 class ChatInterface : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +46,7 @@ class ChatInterface : AppCompatActivity() {
                 runBlocking {
                     launch {
                         val response = SspdimApi.retrofitService.sendMessage(request)
-                        Log.d("NewMessage", "[${response.status}] ${response.message}")
+                        Log.d("NewMessage", "[${response.status}]")
                     }
                 }
             }
