@@ -7,4 +7,8 @@ class SspdimApplication: Application() {
     val database: AppDatabase by lazy {
         AppDatabase.getDatabase(this)
     }
+
+    fun insertFriend() {
+
+    }
 }

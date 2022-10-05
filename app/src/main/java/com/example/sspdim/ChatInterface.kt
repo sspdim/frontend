@@ -12,14 +12,13 @@ import com.example.sspdim.model.Message.Companion.TYPE_FRIEND_MESSAGE
 import com.example.sspdim.model.Message.Companion.TYPE_MY_MESSAGE
 import com.example.sspdim.network.SendMessageRequest
 import com.example.sspdim.network.SspdimApi
-import com.squareup.moshi.Json
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class ChatInterface : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_chat)
+        setContentView(R.layout.fragment_chat)
 
         val datasource = DataSource()
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)

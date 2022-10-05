@@ -13,6 +13,7 @@ import kotlinx.coroutines.runBlocking
 import kotlin.Exception
 
 class LoginViewModel: ViewModel() {
+
     var username: String = ""
     var password: String = ""
     var status: Int = 0
@@ -44,10 +45,6 @@ class LoginViewModel: ViewModel() {
                 }
             }
         }
-    }
-
-    fun saveUsername() {
-
     }
 
     fun getServerDetails() {

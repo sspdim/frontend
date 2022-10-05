@@ -41,6 +41,7 @@ class MainFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d(TAG, "starting login activity")
+        initializeFirebase()
 
         settingsDataStore = SettingsDataStore(requireContext())
         settingsDataStore.isLoggedInPreferenceFlow.asLiveData().observe(viewLifecycleOwner) { value ->
@@ -51,7 +52,7 @@ class MainFragment: Fragment() {
 
     private fun chooseActivity() {
         if (isLoggedIn) {
-            startActivity(Intent(requireContext(), ChatInterface::class.java))
+            startActivity(Intent(requireContext(), ChatActivity::class.java))
         }
         else {
             Log.d(TAG, "starting login activity")
@@ -84,15 +85,15 @@ class MainFragment: Fragment() {
             val token = task.result
 
             Log.d("MainActivity", "Token = [$token]")
-            if (username != null) {
-                val request = AddFirebaseTokenRequest(username!!, token)
-                runBlocking {
-                    launch {
-                        val response = SspdimApi.retrofitService.addToken(request)
-                        Log.d("NewToken", "[${response.status}] ${response.message}")
-                    }
-                }
-            }
+//            if (username != null) {
+//                val request = AddFirebaseTokenRequest(username!!, token)
+//                runBlocking {
+//                    launch {
+//                        val response = SspdimApi.retrofitService.addToken(request)
+//                        Log.d("NewToken", "[${response.status}] ${response.message}")
+//                    }
+//                }
+//            }
         })
     }
 }

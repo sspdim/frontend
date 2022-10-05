@@ -34,6 +34,34 @@ class SettingsDataStore(context: Context) {
             preferences[IS_LOGGED_IN] ?: false
         }
 
+    val usernamePreference: Flow<String> = context.dataStore.data
+        .catch {
+            if (it is IOException) {
+                it.printStackTrace()
+                emit(emptyPreferences())
+            }
+            else {
+                throw it
+            }
+        }
+        .map { preferences ->
+            preferences[USERNAME] ?: ""
+        }
+
+    val serverPreference: Flow<String> = context.dataStore.data
+        .catch {
+            if (it is IOException) {
+                it.printStackTrace()
+                emit(emptyPreferences())
+            }
+            else {
+                throw it
+            }
+        }
+        .map { preferences ->
+            preferences[SERVER] ?: ""
+        }
+
     suspend fun saveLoggedInPreference(isLoggedIn: Boolean, context: Context) {
         context.dataStore.edit { preferences ->
             preferences[IS_LOGGED_IN] = isLoggedIn

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content" android:layout_width="wrap_content">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/add_friend_text_field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        style="@style/OutlinedTextInput"
+        android:hint="Username"
+        android:layout_marginTop="36dp"
+        app:errorIconDrawable="@drawable/ic_baseline_error_outline_24"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/add_friend_text_edit_field"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="username@domain.tld"
+            android:inputType="textPersonName|textNoSuggestions" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

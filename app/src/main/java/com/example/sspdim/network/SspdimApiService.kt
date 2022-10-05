@@ -54,6 +54,8 @@ interface SspdimApiService {
     @POST("message")
     suspend fun sendMessage(@Body requestData: SendMessageRequest): Response2
 
-    // TODO("Receive message request")
+    @Headers("Content-Type: application/json")
+    @POST("add-friend")
+    suspend fun addFriend(@Body requestData: AddFriendRequest): Response
 }
 

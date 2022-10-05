@@ -69,7 +69,7 @@ class RegisterServerListFragment: Fragment() {
                     settingsDataStore.saveUsernamePreference(viewModel.username, requireContext())
                     settingsDataStore.saveServerPreference(viewModel.server, requireContext())
                 }
-                startActivity(Intent(requireContext(), ChatInterface::class.java))
+                startActivity(Intent(requireContext(), ChatActivity::class.java))
             }
             else {
                 Log.d("excc", "failed")
