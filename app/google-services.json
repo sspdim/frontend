@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "526258355193",
+    "project_id": "sspdim-21a61",
+    "storage_bucket": "sspdim-21a61.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:526258355193:android:789fb81b13e672ea301b28",
+        "android_client_info": {
+          "package_name": "com.example.sspdim"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "526258355193-aj1l29ojgbe4r8e01d9lduft33u6tbf4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuazB6KbDZxQetfeSKaNMnrjUlJZTihQs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "526258355193-aj1l29ojgbe4r8e01d9lduft33u6tbf4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
