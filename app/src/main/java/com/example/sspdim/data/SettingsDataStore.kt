@@ -19,6 +19,7 @@ class SettingsDataStore(context: Context) {
     private val IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
     private val USERNAME = stringPreferencesKey("username")
     private val SERVER = stringPreferencesKey("server")
+    private val FCM_TOKEN_SENT = booleanPreferencesKey("fcm_token_sent")
 
     val isLoggedInPreferenceFlow: Flow<Boolean> = context.dataStore.data
         .catch {
@@ -62,6 +63,20 @@ class SettingsDataStore(context: Context) {
             preferences[SERVER] ?: ""
         }
 
+    val fcmTokenSentPreference: Flow<Boolean> = context.dataStore.data
+        .catch {
+            if (it is IOException) {
+                it.printStackTrace()
+                emit(emptyPreferences())
+            }
+            else {
+                throw it
+            }
+        }
+        .map { preferences ->
+            preferences[FCM_TOKEN_SENT] ?: false
+        }
+
     suspend fun saveLoggedInPreference(isLoggedIn: Boolean, context: Context) {
         context.dataStore.edit { preferences ->
             preferences[IS_LOGGED_IN] = isLoggedIn
@@ -77,6 +92,12 @@ class SettingsDataStore(context: Context) {
     suspend fun saveServerPreference(server: String, context: Context) {
         context.dataStore.edit { preferences ->
             preferences[SERVER] = server
+        }
+    }
+
+    suspend fun saveFcmTokenSentPreference(fcmTokenSent: Boolean, context: Context) {
+        context.dataStore.edit { preferences ->
+            preferences[FCM_TOKEN_SENT] = fcmTokenSent
         }
     }
 }

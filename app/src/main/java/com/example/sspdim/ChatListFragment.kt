@@ -10,11 +10,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sspdim.data.SettingsDataStore
 import com.example.sspdim.databinding.FragmentChatListBinding
 import com.example.sspdim.model.ChatListAdapter
-import com.example.sspdim.model.ChatViewModel
+import com.example.sspdim.model.ChatListViewModel
+import com.example.sspdim.model.ChatListViewModelFactory
 import com.example.sspdim.model.ChatViewModelFactory
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -24,8 +26,8 @@ class ChatListFragment: Fragment() {
 
     private lateinit var settingsDataStore: SettingsDataStore
 
-    private val viewModel: ChatViewModel by activityViewModels {
-        ChatViewModelFactory(
+    private val viewModel: ChatListViewModel by activityViewModels {
+        ChatListViewModelFactory(
             (activity?.application as SspdimApplication).database.friendDao()
         )
     }
@@ -66,7 +68,6 @@ class ChatListFragment: Fragment() {
                     }
                 }
             }
-
         return binding.root
     }
 
@@ -74,6 +75,7 @@ class ChatListFragment: Fragment() {
         binding.addFriendActionButton.setOnClickListener {
             onClickButton()
         }
+
         settingsDataStore = SettingsDataStore(requireContext())
         settingsDataStore.usernamePreference.asLiveData().observe(viewLifecycleOwner) { value ->
             viewModel.setUsername(value)
@@ -81,10 +83,25 @@ class ChatListFragment: Fragment() {
         settingsDataStore.serverPreference.asLiveData().observe(viewLifecycleOwner) { value ->
             viewModel.setServer(value)
         }
-        val adapter = ChatListAdapter()
+
+        val adapter = ChatListAdapter (
+            { friend ->
+            val action =
+                ChatListFragmentDirections.actionChatListFragmentToChatFragment(friend.username, friend.status)
+            this.findNavController().navigate(action)
+            },
+            { friend ->
+                viewModel.acceptFriendRequest(friend.username)
+            },
+            { friend ->
+                viewModel.declineFriendRequest(friend.username)
+            }
+        )
+
         binding.chatRecyclerView.adapter = adapter
         binding.chatRecyclerView.layoutManager = LinearLayoutManager(this.context)
-        viewModel.chats.observe(this.viewLifecycleOwner) { items ->
+
+        viewModel.chatList.observe(this.viewLifecycleOwner) { items ->
             items.let {
                 adapter.submitList(it)
             }

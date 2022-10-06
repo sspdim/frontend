@@ -7,6 +7,9 @@
         <variable
             name="chat"
             type="com.example.sspdim.database.Friend" />
+        <variable
+            name="viewModel"
+            type="com.example.sspdim.model.ChatListViewModel" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -15,7 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         app:cardElevation="4dp"
-        app:cardCornerRadius="4dp">
+        app:cardCornerRadius="4dp"
+        android:onClick="@{}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

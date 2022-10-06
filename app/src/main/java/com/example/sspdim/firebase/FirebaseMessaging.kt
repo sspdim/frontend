@@ -20,12 +20,13 @@ class FirebaseMessaging: FirebaseMessagingService() {
 
     private val moshi: Moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
     private val jsonAdapter = moshi.adapter(FcmMessage::class.java)
-    private val database = Room.databaseBuilder(
-        applicationContext,
+    /*private val database = Room.databaseBuilder(
+        this,
         AppDatabase::class.java,
         "app_database"
     )
-        .build()
+        .build()*/
+    private val dbHelper = MyDbHelper(applicationContext)
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
@@ -41,13 +42,17 @@ class FirebaseMessaging: FirebaseMessagingService() {
         super.onNewToken(token)
 
         Log.d("Firebase Token", "Token: $token")
-        val request = AddFirebaseTokenRequest("tusr", token)
+        /*val request = AddFirebaseTokenRequest("ploij0", token)
         runBlocking {
             launch {
                 val response = SspdimApi.retrofitService.addToken(request)
                 Log.d("NewToken", "[${response.status}] ${response.message}]")
             }
-        }
+        }*/
+    }
+
+    override fun onCreate() {
+        super.onCreate()
     }
 
     /*private fun handleFriendRequest2(username: String) {
@@ -70,9 +75,10 @@ class FirebaseMessaging: FirebaseMessagingService() {
 
     private fun handleFriendRequest(username: String) {
         val currentTime = System.currentTimeMillis() / 1000
-        val friend = Friend(username, FRIEND_REQUEST_PENDING, currentTime.toInt())
-        Log.d("handleRequest", "$friend")
-        runBlocking {
+//        val friend = Friend(username, FRIEND_REQUEST_PENDING, currentTime.toInt())
+        Log.d("handleRequest", username)
+        dbHelper.insertItem(username)
+        /*runBlocking {
             try {
                 database.friendDao().insert(friend)
                 Log.d("handleRequest", "Added $friend")
@@ -80,6 +86,6 @@ class FirebaseMessaging: FirebaseMessagingService() {
             catch (e: Exception) {
                 e.printStackTrace()
             }
-        }
+        }*/
     }
 }

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
 import com.example.sspdim.data.SettingsDataStore
 import com.example.sspdim.databinding.FragmentMainBinding
 import com.example.sspdim.network.AddFirebaseTokenRequest
@@ -23,7 +24,8 @@ private const val TAG = "MainFragment"
 
 class MainFragment: Fragment() {
     private var isLoggedIn = false
-    private var username: String? = null
+    private var fcmTokenSent: Boolean = false
+    private var username: String = ""
 
     private lateinit var settingsDataStore: SettingsDataStore
 
@@ -41,12 +43,18 @@ class MainFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d(TAG, "starting login activity")
-        initializeFirebase()
 
         settingsDataStore = SettingsDataStore(requireContext())
         settingsDataStore.isLoggedInPreferenceFlow.asLiveData().observe(viewLifecycleOwner) { value ->
             isLoggedIn = value
             chooseActivity()
+        }
+        settingsDataStore.fcmTokenSentPreference.asLiveData().observe(viewLifecycleOwner) { value ->
+            fcmTokenSent = value
+        }
+        settingsDataStore.usernamePreference.asLiveData().observe(viewLifecycleOwner) { value ->
+            username = value
+            initializeFirebase()
         }
     }
 
@@ -85,15 +93,18 @@ class MainFragment: Fragment() {
             val token = task.result
 
             Log.d("MainActivity", "Token = [$token]")
-//            if (username != null) {
-//                val request = AddFirebaseTokenRequest(username!!, token)
-//                runBlocking {
-//                    launch {
-//                        val response = SspdimApi.retrofitService.addToken(request)
-//                        Log.d("NewToken", "[${response.status}] ${response.message}")
-//                    }
-//                }
-//            }
+            if (!fcmTokenSent and username.isNotEmpty()) {
+                val request = AddFirebaseTokenRequest(username, token)
+                runBlocking {
+                    launch {
+                        val response = SspdimApi.retrofitService.addToken(request)
+                        Log.d("NewToken", "[${response.status}] ${response.message}")
+                    }
+                }
+                lifecycleScope.launch {
+                    settingsDataStore.saveFcmTokenSentPreference(true, requireContext())
+                }
+            }
         })
     }
 }

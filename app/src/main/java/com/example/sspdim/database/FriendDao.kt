@@ -16,9 +16,12 @@ interface FriendDao {
     @Update
     suspend fun update(friend: Friend)
 
-    @Delete
-    suspend fun delete(friend: Friend)
+    @Query("delete from friends where username = :username")
+    suspend fun deleteFriend(username: String)
 
     @Query("select * from friends order by last_interaction_timestamp desc")
     fun getAllFriends(): Flow<List<Friend>>
+
+    @Query("select status from friends where username = :username")
+    fun getFriendDetails(username: String): Flow<Int>
 }

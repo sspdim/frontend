@@ -3,16 +3,18 @@ package com.example.sspdim.database
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 
-@Entity(tableName = "chats", primaryKeys = ["friend_username", "message_id", "sender_username"])
+@Entity(tableName = "chats", primaryKeys = ["friend_username", "message_id", "sender"])
 data class ChatMessage (
     @ColumnInfo(name = "friend_username")
     val friendUsername: String,
     @ColumnInfo(name = "message_id")
-    val messageId: Long,
-    @ColumnInfo(name = "sender_username")
-    val senderUsername: Int,
+    val messageId: Int,
+    @ColumnInfo(name = "sender")
+    val sender: Int,
     @ColumnInfo(name = "timestamp")
     val timestamp: Int,
+    @ColumnInfo(name = "message_content")
+    val messageContent: String,
     @ColumnInfo(name = "status")
     val status: Int
 ) {

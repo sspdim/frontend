@@ -21,7 +21,7 @@ class ChatInterface : AppCompatActivity() {
         setContentView(R.layout.fragment_chat)
 
         val datasource = DataSource()
-        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
+        val recyclerView = findViewById<RecyclerView>(R.id.chat_message_recycler_view)
         val messageAdapter = MessageAdapter(this, datasource)
 
         recyclerView.adapter = messageAdapter

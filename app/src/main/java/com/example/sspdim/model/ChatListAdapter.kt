@@ -7,11 +7,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sspdim.database.Friend
-import com.example.sspdim.database.Friend.Companion.FRIEND_REQUEST_ACCEPTED
 import com.example.sspdim.database.Friend.Companion.FRIEND_REQUEST_PENDING
 import com.example.sspdim.databinding.ChatListItemBinding
 
-class ChatListAdapter: ListAdapter<Friend, ChatListAdapter.ChatViewHolder>(DiffCallback) {
+class ChatListAdapter(
+    private val onItemClicked: (Friend) -> Unit,
+    private val onAccept: (Friend) -> Unit,
+    private val onDecline: (Friend) -> Unit
+): ListAdapter<Friend, ChatListAdapter.ChatViewHolder>(DiffCallback) {
 
     companion object DiffCallback : DiffUtil.ItemCallback<Friend>() {
 
@@ -24,12 +27,18 @@ class ChatListAdapter: ListAdapter<Friend, ChatListAdapter.ChatViewHolder>(DiffC
         }
     }
 
-    class ChatViewHolder(private var binding: ChatListItemBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class ChatViewHolder(private var binding: ChatListItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(friend: Friend) {
             binding.chat = friend
             if (friend.status == FRIEND_REQUEST_PENDING) {
                 binding.chatItemAcceptButton.visibility = View.VISIBLE
                 binding.chatItemDeclineButton.visibility = View.VISIBLE
+                binding.chatItemAcceptButton.setOnClickListener {
+                    onAccept(friend)
+                }
+                binding.chatItemDeclineButton.setOnClickListener {
+                    onDecline(friend)
+                }
             }
         }
     }
@@ -47,6 +56,9 @@ class ChatListAdapter: ListAdapter<Friend, ChatListAdapter.ChatViewHolder>(DiffC
 
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
         val friend = getItem(position)
+        holder.itemView.setOnClickListener {
+            onItemClicked(friend)
+        }
         holder.bind(friend)
     }
 }
