@@ -2,12 +2,9 @@ package com.example.sspdim.model
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.sspdim.database.ChatMessage
-import com.example.sspdim.database.ChatMessage.Companion.MESSAGE_SENT
-import com.example.sspdim.database.ChatMessage.Companion.TYPE_MY_MESSAGE
-import com.example.sspdim.database.ChatMessageDao
 import com.example.sspdim.database.Friend
 import com.example.sspdim.database.Friend.Companion.FRIEND_REQUEST_ACCEPTED
+import com.example.sspdim.database.Friend.Companion.FRIEND_REQUEST_PENDING
 import com.example.sspdim.database.Friend.Companion.FRIEND_REQUEST_SENT
 import com.example.sspdim.database.FriendDao
 import com.example.sspdim.network.AddFriendRequest
@@ -58,6 +55,9 @@ class ChatListViewModel(private val friendDao: FriendDao): ViewModel() {
         val currentTime = System.currentTimeMillis() / 1000
         val newFriend = Friend(friendUsername, FRIEND_REQUEST_ACCEPTED, currentTime.toInt())
         viewModelScope.launch {
+            val request = AddFriendRequest("$username@$server", friendUsername)
+            Log.d(TAG, "${request.friendUsername}, ${request.username}")
+            SspdimApi.retrofitService.acceptFriend(request)
             friendDao.update(newFriend)
         }
     }
@@ -65,6 +65,23 @@ class ChatListViewModel(private val friendDao: FriendDao): ViewModel() {
     fun declineFriendRequest(friendUsername: String) {
         viewModelScope.launch {
             friendDao.deleteFriend(friendUsername)
+        }
+    }
+
+    fun updateFriendRequestStatus(friendUsername: String) {
+        val currentTime = System.currentTimeMillis() / 1000
+        val newFriend = Friend(friendUsername, FRIEND_REQUEST_ACCEPTED, currentTime.toInt())
+        viewModelScope.launch {
+            friendDao.update(newFriend)
+        }
+    }
+
+    fun addFriend(friendUsername: String) {
+        val currentTime = System.currentTimeMillis() / 1000
+        val newFriend = Friend(friendUsername, FRIEND_REQUEST_PENDING, currentTime.toInt())
+        viewModelScope.launch {
+            Log.d(TAG, "Adding friend ${newFriend.username}")
+            friendDao.insert(newFriend)
         }
     }
 

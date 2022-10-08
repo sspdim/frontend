@@ -3,21 +3,29 @@ package com.example.sspdim.model
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.sspdim.database.ChatMessage
+import com.example.sspdim.database.ChatMessage.Companion.MESSAGE_RECEIVED
 import com.example.sspdim.database.ChatMessage.Companion.MESSAGE_SENT
+import com.example.sspdim.database.ChatMessage.Companion.TYPE_FRIEND_MESSAGE
 import com.example.sspdim.database.ChatMessage.Companion.TYPE_MY_MESSAGE
 import com.example.sspdim.database.ChatMessageDao
+import com.example.sspdim.network.AddFriendRequest
+import com.example.sspdim.network.Response
+import com.example.sspdim.network.SendMessageRequest
+import com.example.sspdim.network.SspdimApi
 import kotlinx.coroutines.launch
 
 private const val TAG = "ChatViewModel"
 
 class ChatViewModel(
     private val chatMessageDao: ChatMessageDao,
-    friendUsername: String
+    private val friendUsername: String
     ): ViewModel() {
     private var username: String = ""
     private var server: String = ""
 
     val chats: LiveData<List<ChatMessage>> = chatMessageDao.getFriendMessages(friendUsername).asLiveData()
+
+    val messageIds: MutableSet<Int> = mutableSetOf()
 
     fun setUsername(username: String) {
         this.username = username
@@ -27,10 +35,18 @@ class ChatViewModel(
         this.server = server
     }
 
-    fun sendMessage(friendUsername: String, messageContent: String) {
+    fun sendMessage(messageContent: String): LiveData<Int> {
+        var response: Response?
+        val res = MutableLiveData<Int>()
         val currentTime = System.currentTimeMillis() / 1000
+        var messageId = (0..Int.MAX_VALUE).random()
+        while (messageIds.contains(messageId)) {
+            messageId = (0..Int.MAX_VALUE).random()
+        }
+        messageIds.add(messageId)
+        Log.d(TAG, "sendMessage Message Id: $messageId")
         val newMessage = ChatMessage(
-            friendUsername, (0..Int.MAX_VALUE).random(),
+            friendUsername, messageId,
             TYPE_MY_MESSAGE, currentTime.toInt(), messageContent, MESSAGE_SENT
         )
         /*
@@ -38,7 +54,40 @@ class ChatViewModel(
          */
         Log.d(TAG, newMessage.toString())
         viewModelScope.launch {
+            try {
+                val request = SendMessageRequest("$username@$server", friendUsername, messageContent, messageId.toString())
+                Log.d(TAG, "${request.to}, ${request.from}, ${request.message}")
+                response = SspdimApi.retrofitService.sendMessage(request)
+                res.postValue(response?.status)
+                Log.d(TAG, "Retrofit Done")
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        viewModelScope.launch {
             chatMessageDao.insert(newMessage)
+            Log.d(TAG, "Room Done")
+        }
+        return res
+    }
+
+    fun addMessage(fromUsername: String, messageContent: String, messageId: String) {
+        val currentTime = System.currentTimeMillis() / 1000
+        Log.d(TAG, "addMessage Message Id: $messageId")
+        val newMessage = ChatMessage(
+            fromUsername, messageId.toInt(),
+            TYPE_FRIEND_MESSAGE, currentTime.toInt(), messageContent, MESSAGE_RECEIVED
+        )
+        Log.d(TAG, newMessage.toString())
+        viewModelScope.launch {
+            try {
+                chatMessageDao.insert(newMessage)
+                Log.d(TAG, "Done")
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 }

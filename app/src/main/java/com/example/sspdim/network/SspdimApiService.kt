@@ -25,10 +25,6 @@ object SspdimApi {
     }
 }
 
-data class Response2 (
-    @Json(name = "status") val status: Int
-)
-
 fun setBaseUrl(url: String) {
     BASE_URL = url
 }
@@ -51,11 +47,15 @@ interface SspdimApiService {
     suspend fun addToken(@Body requestData: AddFirebaseTokenRequest): Response
 
     @Headers("Content-Type: application/json")
-    @POST("message")
-    suspend fun sendMessage(@Body requestData: SendMessageRequest): Response2
+    @POST("send-message")
+    suspend fun sendMessage(@Body requestData: SendMessageRequest): Response
 
     @Headers("Content-Type: application/json")
     @POST("add-friend")
     suspend fun addFriend(@Body requestData: AddFriendRequest): Response
+
+    @Headers("Content-Type: application/json")
+    @POST("accept-friend")
+    suspend fun acceptFriend(@Body requestData: AddFriendRequest): Response
 }
 

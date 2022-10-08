@@ -31,7 +31,7 @@ class MyDbHelper(context: Context) : SQLiteOpenHelper(context, "app_database", n
         val contentValues = ContentValues()
         contentValues.put("username", friendUsername)
         contentValues.put("status", FRIEND_REQUEST_PENDING)
-        contentValues.put("last_interaction_time", currentTime)
+        contentValues.put("last_interaction_timestamp", currentTime.toInt())
         db.insert("friends", null, contentValues)
         db.close()
     }
