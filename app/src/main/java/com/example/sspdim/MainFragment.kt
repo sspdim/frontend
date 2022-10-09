@@ -24,8 +24,6 @@ private const val TAG = "MainFragment"
 
 class MainFragment: Fragment() {
     private var isLoggedIn = false
-    private var fcmTokenSent: Boolean = false
-    private var username: String = ""
 
     private lateinit var settingsDataStore: SettingsDataStore
 
@@ -49,13 +47,6 @@ class MainFragment: Fragment() {
             isLoggedIn = value
             chooseActivity()
         }
-        settingsDataStore.fcmTokenSentPreference.asLiveData().observe(viewLifecycleOwner) { value ->
-            fcmTokenSent = value
-        }
-        settingsDataStore.usernamePreference.asLiveData().observe(viewLifecycleOwner) { value ->
-            username = value
-            initializeFirebase()
-        }
     }
 
     private fun chooseActivity() {
@@ -66,45 +57,5 @@ class MainFragment: Fragment() {
             Log.d(TAG, "starting login activity")
             startActivity(Intent(requireContext(), LoginActivity::class.java))
         }
-    }
-
-    private fun checkGooglePlayServices(): Boolean {
-        val status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(requireContext())
-        return if (status != ConnectionResult.SUCCESS) {
-            Log.e(TAG, "error")
-            false
-        }
-        else {
-            Log.i(TAG, "Google play services updated")
-            true
-        }
-    }
-
-    private fun initializeFirebase() {
-        if(!checkGooglePlayServices()) {
-            Log.w(TAG, "Device does not have Google Play Services")
-        }
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.w("MainActivity", "Fetching failed", task.exception)
-                return@OnCompleteListener
-            }
-
-            val token = task.result
-
-            Log.d("MainActivity", "Token = [$token]")
-            if (!fcmTokenSent and username.isNotEmpty()) {
-                val request = AddFirebaseTokenRequest(username, token)
-                runBlocking {
-                    launch {
-                        val response = SspdimApi.retrofitService.addToken(request)
-                        Log.d("NewToken", "[${response.status}] ${response.message}")
-                    }
-                }
-                lifecycleScope.launch {
-                    settingsDataStore.saveFcmTokenSentPreference(true, requireContext())
-                }
-            }
-        })
     }
 }

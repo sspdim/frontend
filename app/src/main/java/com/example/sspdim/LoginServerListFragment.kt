@@ -10,8 +10,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.sspdim.data.SettingsDataStore
 import com.example.sspdim.databinding.FragmentLoginServerListBinding
+import com.example.sspdim.databinding.FragmentLoginServerListBindingImpl
 import com.example.sspdim.model.LoginViewModel
 import com.example.sspdim.model.ServerListAdapter
 import com.example.sspdim.network.Response
@@ -72,6 +74,7 @@ class LoginServerListFragment: Fragment() {
             }
             else {
                 Log.d("excc", "failed")
+                findNavController().navigate(LoginServerListFragmentDirections.actionLoginServerListFragmentToLoginFragment())
             }
         } catch (e: JSONException) {
             e.printStackTrace()

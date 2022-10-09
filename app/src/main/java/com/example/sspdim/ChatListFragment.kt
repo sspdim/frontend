@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,11 +23,20 @@ import com.example.sspdim.databinding.FragmentChatListBinding
 import com.example.sspdim.model.ChatListAdapter
 import com.example.sspdim.model.ChatListViewModel
 import com.example.sspdim.model.ChatListViewModelFactory
+import com.example.sspdim.network.AddFirebaseTokenRequest
+import com.example.sspdim.network.SspdimApi
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 private const val TAG = "ChatListFragment"
 
 class ChatListFragment: Fragment() {
+    private var fcmTokenSent: Boolean = false
 
     private lateinit var settingsDataStore: SettingsDataStore
 
@@ -141,6 +151,11 @@ class ChatListFragment: Fragment() {
         }
         settingsDataStore.serverPreference.asLiveData().observe(viewLifecycleOwner) { value ->
             viewModel.setServer(value)
+            initializeFirebase()
+        }
+        settingsDataStore.fcmTokenSentPreference.asLiveData().observe(viewLifecycleOwner) { value ->
+            fcmTokenSent = value
+            initializeFirebase()
         }
 
         val adapter = ChatListAdapter (
@@ -211,7 +226,43 @@ class ChatListFragment: Fragment() {
         viewModel.updateFriendRequestStatus(friendUsername)
     }
 
-    private fun onClickChat() {
-        // TODO("Handle clicking on a specific chat; navigate to chat fragment")
+    private fun checkGooglePlayServices(): Boolean {
+        val status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(requireContext())
+        return if (status != ConnectionResult.SUCCESS) {
+            Log.e(TAG, "error")
+            false
+        }
+        else {
+            Log.i(TAG, "Google play services updated")
+            true
+        }
+    }
+
+    private fun initializeFirebase() {
+        if(!checkGooglePlayServices()) {
+            Log.w(TAG, "Device does not have Google Play Services")
+        }
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("MainActivity", "Fetching failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            val token = task.result
+
+            Log.d("MainActivity", "Token = [$token]")
+            if (!fcmTokenSent and viewModel.getUsername().isNotEmpty()) {
+                val request = AddFirebaseTokenRequest(viewModel.getUsername(), token)
+                runBlocking {
+                    launch {
+                        val response = SspdimApi.retrofitService.addToken(request)
+                        Log.d("NewToken", "[${response.status}] ${response.message}")
+                    }
+                }
+                lifecycleScope.launch {
+                    settingsDataStore.saveFcmTokenSentPreference(true, requireContext())
+                }
+            }
+        })
     }
 }

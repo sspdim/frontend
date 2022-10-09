@@ -17,5 +17,11 @@
     <fragment
         android:id="@+id/loginServerListFragment"
         android:name="com.example.sspdim.LoginServerListFragment"
-        android:label="LoginServerListFragment" />
+        android:label="LoginServerListFragment" >
+        <action
+            android:id="@+id/action_loginServerListFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

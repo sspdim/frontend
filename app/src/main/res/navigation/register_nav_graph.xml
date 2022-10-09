@@ -17,5 +17,11 @@
     <fragment
         android:id="@+id/registerServerListFragment"
         android:name="com.example.sspdim.RegisterServerListFragment"
-        android:label="RegisterServerListFragment" />
+        android:label="RegisterServerListFragment" >
+        <action
+            android:id="@+id/action_registerServerListFragment_to_registerFragment"
+            app:destination="@id/registerFragment"
+            app:popUpTo="@id/registerFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

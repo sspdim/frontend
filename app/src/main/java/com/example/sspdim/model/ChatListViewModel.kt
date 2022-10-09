@@ -49,6 +49,10 @@ class ChatListViewModel(private val friendDao: FriendDao): ViewModel() {
         this.server = server
     }
 
+    fun getUsername(): String {
+        return username
+    }
+
     fun acceptFriendRequest(friendUsername: String) {
         val currentTime = System.currentTimeMillis() / 1000
         val newFriend = Friend(friendUsername, FRIEND_REQUEST_ACCEPTED, currentTime.toInt())

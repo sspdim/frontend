@@ -27,7 +27,7 @@ class ChatInterface : AppCompatActivity() {
         recyclerView.adapter = messageAdapter
         recyclerView.setHasFixedSize(true)
 
-        val sendButton: Button = findViewById(R.id.send_button)
+        /*val sendButton: Button = findViewById(R.id.send_button)
         sendButton.setOnClickListener {
             val textInput = findViewById<TextView>(R.id.enter_message_text_input)
             val msg = textInput.text.toString()
@@ -44,6 +44,6 @@ class ChatInterface : AppCompatActivity() {
                     }
                 }
             }
-        }
+        }*/
     }
 }
