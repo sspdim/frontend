@@ -96,8 +96,6 @@ class FirebaseMessaging: FirebaseMessagingService() {
         message.data["data"]?.let { Log.d("handleFriendRequest", it) }
         val handler = Handler(Looper.getMainLooper())
         handler.post(Runnable {
-            Toast.makeText(baseContext, "Received Friend request from ${message.data["data"]}",
-                Toast.LENGTH_SHORT).show()
             message.data.let {
                 val intent = Intent("FriendRequest")
                 intent.putExtra("username", message.data["data"])
@@ -122,8 +120,6 @@ class FirebaseMessaging: FirebaseMessagingService() {
         message.data["data"]?.let { Log.d("handleMessage", it) }
         val handler = Handler(Looper.getMainLooper())
         handler.post(Runnable {
-            Toast.makeText(baseContext, "Received message from ${message.data["data"]}",
-                Toast.LENGTH_SHORT).show()
             message.data.let {
                 val intent = Intent("NewMessage")
                 intent.putExtra("from", message.data["data"])
@@ -139,8 +135,6 @@ class FirebaseMessaging: FirebaseMessagingService() {
         message.data["data"]?.let { Log.d("handleFriendRequest", it) }
         val handler = Handler(Looper.getMainLooper())
         handler.post(Runnable {
-            Toast.makeText(baseContext, "Received Friend request from ${message.data["data"]}",
-                Toast.LENGTH_SHORT).show()
             message.data.let {
                 val intent = Intent("FriendRequest")
                 intent.putExtra("username", message.data["data"])
