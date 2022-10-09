@@ -60,6 +60,18 @@ class LoginServerListFragment: Fragment() {
     @SuppressLint("LongLogTag")
     private fun onClickLogin() {
         Log.d(TAG, "Selected server: $selectedServerDomainName")
+        if (selectedServerDomainName.isEmpty()) {
+            try {
+                Toast.makeText(
+                    requireContext(),
+                    "Select a server!",
+                    Toast.LENGTH_LONG
+                ).show()
+            } catch (e: JSONException) {
+                Toast.makeText(requireContext(), "Error", Toast.LENGTH_LONG).show()
+            }
+            return
+        }
         setBaseUrl("https://$selectedServerDomainName")
         viewModel.submitLoginDetails()
         if (viewModel.status > 0) {

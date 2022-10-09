@@ -148,10 +148,10 @@ class ChatListFragment: Fragment() {
         settingsDataStore = SettingsDataStore(requireContext())
         settingsDataStore.usernamePreference.asLiveData().observe(viewLifecycleOwner) { value ->
             viewModel.setUsername(value)
+            initializeFirebase()
         }
         settingsDataStore.serverPreference.asLiveData().observe(viewLifecycleOwner) { value ->
             viewModel.setServer(value)
-            initializeFirebase()
         }
         settingsDataStore.fcmTokenSentPreference.asLiveData().observe(viewLifecycleOwner) { value ->
             fcmTokenSent = value

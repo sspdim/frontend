@@ -30,6 +30,7 @@ class ChatViewModel(
 
     fun setServer(server: String) {
         this.server = server
+        setBaseUrl("https://$server")
     }
 
     fun sendMessage(messageContent: String): LiveData<Int> {

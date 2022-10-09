@@ -47,6 +47,7 @@ class ChatListViewModel(private val friendDao: FriendDao): ViewModel() {
 
     fun setServer(server: String) {
         this.server = server
+        setBaseUrl("https://$server")
     }
 
     fun getUsername(): String {

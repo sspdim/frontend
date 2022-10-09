@@ -60,6 +60,18 @@ class RegisterServerListFragment: Fragment() {
     @SuppressLint("LongLogTag")
     private fun onClickRegister() {
         Log.d(TAG, "Selected server: $selectedServerDomainName")
+        if (selectedServerDomainName.isEmpty()) {
+            try {
+                Toast.makeText(
+                    requireContext(),
+                    "Select a server!",
+                    Toast.LENGTH_LONG
+                ).show()
+            } catch (e: JSONException) {
+                Toast.makeText(requireContext(), "Error", Toast.LENGTH_LONG).show()
+            }
+            return
+        }
         setBaseUrl("https://" + selectedServerDomainName)
         viewModel.submitRegisterDetails()
         Log.d("srg", "${viewModel.status}, ${viewModel.message}; ${viewModel.response?.message}, ${viewModel.response?.status}")
