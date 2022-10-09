@@ -19,6 +19,7 @@ import com.example.sspdim.model.ServerListAdapter
 import com.example.sspdim.network.Response
 import com.example.sspdim.network.setBaseUrl
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.json.JSONException
 
 private const val TAG = "RegisterServerListFragment"
@@ -43,11 +44,12 @@ class RegisterServerListFragment: Fragment() {
             selectedServerDomainName = server.domainName
             Log.d(TAG, "Selected server: $selectedServerDomainName")
         }
+
+        viewModel.getServerDetails()
+
         binding.registerButton.setOnClickListener {
             onClickRegister()
         }
-
-        viewModel.getServerDetails()
 
         return binding.root
     }
@@ -72,7 +74,7 @@ class RegisterServerListFragment: Fragment() {
             }
             return
         }
-        setBaseUrl("https://" + selectedServerDomainName)
+        setBaseUrl("https://$selectedServerDomainName")
         viewModel.submitRegisterDetails()
         Log.d("srg", "${viewModel.status}, ${viewModel.message}; ${viewModel.response?.message}, ${viewModel.response?.status}")
         if (viewModel.status > 0) {
@@ -86,12 +88,21 @@ class RegisterServerListFragment: Fragment() {
                 Toast.makeText(requireContext(), "Error", Toast.LENGTH_LONG).show()
             }
         }
+        Log.d(TAG, "Registration response: ${viewModel.status}")
         try {
             if (viewModel.status == Response.STATUS_SUCCESS) {
-                lifecycleScope.launch {
-                    settingsDataStore.saveLoggedInPreference(true, requireContext())
-                    settingsDataStore.saveUsernamePreference(viewModel.username, requireContext())
-                    settingsDataStore.saveServerPreference(selectedServerDomainName, requireContext())
+                runBlocking {
+                    launch {
+                        settingsDataStore.saveLoggedInPreference(true, requireContext())
+                        settingsDataStore.saveUsernamePreference(
+                            viewModel.username,
+                            requireContext()
+                        )
+                        settingsDataStore.saveServerPreference(
+                            selectedServerDomainName,
+                            requireContext()
+                        )
+                    }
                 }
                 startActivity(Intent(requireContext(), ChatActivity::class.java))
             }

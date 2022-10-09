@@ -47,6 +47,7 @@ class ChatListViewModel(private val friendDao: FriendDao): ViewModel() {
 
     fun setServer(server: String) {
         this.server = server
+        Log.d(TAG, "setServer $server")
         setBaseUrl("https://$server")
     }
 

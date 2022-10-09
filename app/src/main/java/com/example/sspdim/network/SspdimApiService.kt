@@ -1,5 +1,6 @@
 package com.example.sspdim.network
 
+import android.util.Log
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
@@ -9,23 +10,30 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.POST
 
+private const val TAG = "SspdimApiService"
+
 private var BASE_URL = "https://capstone1.devmashru.tech"
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()
-private val retrofit = Retrofit.Builder()
+private var retrofit = Retrofit.Builder()
     .addConverterFactory(MoshiConverterFactory.create(moshi))
     .baseUrl(BASE_URL)
     .build()
 
 object SspdimApi {
-    val retrofitService: SspdimApiService by lazy {
-        retrofit.create(SspdimApiService::class.java)
-    }
+    var retrofitService: SspdimApiService = retrofit.create(SspdimApiService::class.java)
 }
 
 fun setBaseUrl(url: String) {
     BASE_URL = url
+    Log.d(TAG, "Base url: $BASE_URL")
+    retrofit = Retrofit.Builder()
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .baseUrl(BASE_URL)
+        .build()
+    SspdimApi.retrofitService = retrofit.create(SspdimApiService::class.java)
+    Log.d("$TAG new", retrofit.baseUrl().toString())
 }
 
 interface SspdimApiService {

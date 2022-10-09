@@ -244,13 +244,13 @@ class ChatListFragment: Fragment() {
         }
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
-                Log.w("MainActivity", "Fetching failed", task.exception)
+                Log.w(TAG, "Fetching failed", task.exception)
                 return@OnCompleteListener
             }
 
             val token = task.result
 
-            Log.d("MainActivity", "Token = [$token]")
+            Log.d(TAG, "Token = [$token]")
             if (!fcmTokenSent and viewModel.getUsername().isNotEmpty()) {
                 val request = AddFirebaseTokenRequest(viewModel.getUsername(), token)
                 runBlocking {
