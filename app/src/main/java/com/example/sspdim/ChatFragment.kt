@@ -172,11 +172,6 @@ class ChatFragment: Fragment() {
             val resp: LiveData<Int> = viewModel.sendMessage(enteredMessage)
             resp.observe(requireActivity()) { value ->
                 Log.d(TAG, "Response from server: ${resp.value}")
-                Toast.makeText(
-                    requireContext(),
-                    "Message sent!",
-                    Toast.LENGTH_LONG
-                ).show()
             }
         }
     }
