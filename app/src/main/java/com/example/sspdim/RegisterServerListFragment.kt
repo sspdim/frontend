@@ -1,5 +1,6 @@
 package com.example.sspdim
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -20,12 +21,17 @@ import com.example.sspdim.network.setBaseUrl
 import kotlinx.coroutines.launch
 import org.json.JSONException
 
+private const val TAG = "RegisterServerListFragment"
+
 class RegisterServerListFragment: Fragment() {
 
     private lateinit var settingsDataStore: SettingsDataStore
 
     private val viewModel: RegisterViewModel by activityViewModels()
 
+    private var selectedServerDomainName: String = ""
+
+    @SuppressLint("LongLogTag")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,7 +39,10 @@ class RegisterServerListFragment: Fragment() {
         val binding = FragmentRegisterServerListBinding.inflate(inflater)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.serversRecyclerView.adapter = ServerListAdapter()
+        binding.serversRecyclerView.adapter = ServerListAdapter { server ->
+            selectedServerDomainName = server.domainName
+            Log.d(TAG, "Selected server: $selectedServerDomainName")
+        }
         binding.registerButton.setOnClickListener {
             onClickRegister()
         }
@@ -48,8 +57,10 @@ class RegisterServerListFragment: Fragment() {
         settingsDataStore = SettingsDataStore(requireContext())
     }
 
+    @SuppressLint("LongLogTag")
     private fun onClickRegister() {
-        setBaseUrl("https://" + viewModel.server)
+        Log.d(TAG, "Selected server: $selectedServerDomainName")
+        setBaseUrl("https://" + selectedServerDomainName)
         viewModel.submitRegisterDetails()
         Log.d("srg", "${viewModel.status}, ${viewModel.message}; ${viewModel.response?.message}, ${viewModel.response?.status}")
         if (viewModel.status > 0) {
@@ -68,7 +79,7 @@ class RegisterServerListFragment: Fragment() {
                 lifecycleScope.launch {
                     settingsDataStore.saveLoggedInPreference(true, requireContext())
                     settingsDataStore.saveUsernamePreference(viewModel.username, requireContext())
-                    settingsDataStore.saveServerPreference(viewModel.server, requireContext())
+                    settingsDataStore.saveServerPreference(selectedServerDomainName, requireContext())
                 }
                 startActivity(Intent(requireContext(), ChatActivity::class.java))
             }

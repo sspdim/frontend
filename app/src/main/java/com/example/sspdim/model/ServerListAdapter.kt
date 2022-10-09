@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +14,9 @@ import com.example.sspdim.databinding.ServerListItemBinding
 import com.example.sspdim.network.Server
 import kotlin.properties.Delegates
 
-class ServerListAdapter: ListAdapter<Server, ServerListAdapter.ServerViewHolder>(DiffCallback) {
+class ServerListAdapter(
+    private val onClick: (Server) -> Unit
+): ListAdapter<Server, ServerListAdapter.ServerViewHolder>(DiffCallback) {
 
 //    var selectedPosition by Delegates.observable(-1) { _, oldPos, newPos ->
 //        notifyItemChanged(oldPos)
@@ -22,7 +25,7 @@ class ServerListAdapter: ListAdapter<Server, ServerListAdapter.ServerViewHolder>
 
     companion object DiffCallback : DiffUtil.ItemCallback<Server>() {
 
-        private var selectedPosition: Int = -1
+        var selectedPosition: Int = -1
 
         override fun areItemsTheSame(oldItem: Server, newItem: Server): Boolean {
             return oldItem.ipAddress == newItem.ipAddress
@@ -46,26 +49,27 @@ class ServerListAdapter: ListAdapter<Server, ServerListAdapter.ServerViewHolder>
                 selectedPosition = position
                 notifyItemChanged(temp)
                 notifyItemChanged(selectedPosition)
+                onClick(server)
             }
-//            if (selectedPosition == -1 && position == 0) {
-//                binding.serverNameRadiobutton.isChecked = true
-//            }
-//            else {
-//                if (selectedPosition == position) {
-//                    binding.serverNameRadiobutton.isChecked = true
-//                }
-//                else {
-//                    binding.serverNameRadiobutton.isChecked = false
-//                    selectedPosition = adapterPosition
-//                    notifyDataSetChanged()
-//                }
-//            }
+            /*if (selectedPosition == -1 && position == 0) {
+                binding.serverNameRadiobutton.isChecked = true
+            }
+            else {
+                if (selectedPosition == position) {
+                    binding.serverNameRadiobutton.isChecked = true
+                }
+                else {
+                    binding.serverNameRadiobutton.isChecked = false
+                    selectedPosition = adapterPosition
+                    notifyDataSetChanged()
+                }
+            }*/
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServerListAdapter.ServerViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServerViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return ServerListAdapter().ServerViewHolder(
+        return ServerViewHolder(
             ServerListItemBinding.inflate(
                 layoutInflater,
                 parent,
@@ -74,7 +78,7 @@ class ServerListAdapter: ListAdapter<Server, ServerListAdapter.ServerViewHolder>
         )
     }
 
-    override fun onBindViewHolder(holder: ServerListAdapter.ServerViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ServerViewHolder, position: Int) {
         val server = getItem(position)
         holder.bind(server, position)
     }

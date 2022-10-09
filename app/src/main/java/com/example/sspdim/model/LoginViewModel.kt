@@ -23,9 +23,6 @@ class LoginViewModel: ViewModel() {
     private val _servers = MutableLiveData<List<Server>>()
     val servers: LiveData<List<Server>> = _servers
 
-    private val _server = MutableLiveData<Server>()
-    val server: String = "capstone1.devmashru.tech"
-
     fun initData(username: String, password: String) {
         this.username = username
         this.password = password
