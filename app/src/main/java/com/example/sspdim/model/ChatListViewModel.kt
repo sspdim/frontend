@@ -7,9 +7,7 @@ import com.example.sspdim.database.Friend.Companion.FRIEND_REQUEST_ACCEPTED
 import com.example.sspdim.database.Friend.Companion.FRIEND_REQUEST_PENDING
 import com.example.sspdim.database.Friend.Companion.FRIEND_REQUEST_SENT
 import com.example.sspdim.database.FriendDao
-import com.example.sspdim.network.AddFriendRequest
-import com.example.sspdim.network.Response
-import com.example.sspdim.network.SspdimApi
+import com.example.sspdim.network.*
 import kotlinx.coroutines.launch
 
 private const val TAG = "ChatListViewModel"
@@ -82,6 +80,32 @@ class ChatListViewModel(private val friendDao: FriendDao): ViewModel() {
         viewModelScope.launch {
             Log.d(TAG, "Adding friend ${newFriend.username}")
             friendDao.insert(newFriend)
+        }
+    }
+
+    fun getPendingRequests(): MutableLiveData<List<PendingFriendRequest>> {
+        var response: List<PendingFriendRequest>?
+        val res = MutableLiveData<List<PendingFriendRequest>>()
+        viewModelScope.launch {
+            Log.d(TAG, "Fetching pending friend requests")
+            val request = GetPendingFriendRequestsRequest("$username@$server")
+            response = SspdimApi.retrofitService.getPendingFriendRequests(request)
+            res.postValue(response!!)
+        }
+        return res
+    }
+
+    fun updateFriendsList(friendUsername: String, status: Int) {
+        val currentTime = System.currentTimeMillis() / 1000
+        val newFriend = Friend(friendUsername, status, currentTime.toInt())
+        viewModelScope.launch {
+            Log.d(TAG, "Adding friend ${newFriend.username}")
+            if (status == FRIEND_REQUEST_PENDING) {
+                friendDao.insert(newFriend)
+            }
+            else if (status == FRIEND_REQUEST_ACCEPTED) {
+                friendDao.update(newFriend)
+            }
         }
     }
 

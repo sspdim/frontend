@@ -124,6 +124,7 @@ class ChatFragment: Fragment() {
         settingsDataStore.serverPreference.asLiveData().observe(viewLifecycleOwner) { value ->
             viewModel.setServer(value)
         }
+
         val adapter = ChatMessageAdapter()
         binding.chatMessageRecyclerView.adapter = adapter
         binding.chatMessageRecyclerView.layoutManager = LinearLayoutManager(this.context)
@@ -146,13 +147,21 @@ class ChatFragment: Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "onResume")
+        val pendingRequests = viewModel.getPendingMessages()
+        pendingRequests.observe(requireActivity()) {
+            it.forEach { request ->
+                Log.d(TAG, "Pending request from ${request.fromUsername}")
+                viewModel.addMessage(request.fromUsername, request.messageContent, request.messageId)
+            }
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(messageReceiver)
-    }
-
-    private fun addMessage(friendUsername: String, message: String) {
-
     }
 
     private fun onClickSend() {

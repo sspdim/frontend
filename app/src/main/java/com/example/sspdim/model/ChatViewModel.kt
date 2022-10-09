@@ -8,10 +8,7 @@ import com.example.sspdim.database.ChatMessage.Companion.MESSAGE_SENT
 import com.example.sspdim.database.ChatMessage.Companion.TYPE_FRIEND_MESSAGE
 import com.example.sspdim.database.ChatMessage.Companion.TYPE_MY_MESSAGE
 import com.example.sspdim.database.ChatMessageDao
-import com.example.sspdim.network.AddFriendRequest
-import com.example.sspdim.network.Response
-import com.example.sspdim.network.SendMessageRequest
-import com.example.sspdim.network.SspdimApi
+import com.example.sspdim.network.*
 import kotlinx.coroutines.launch
 
 private const val TAG = "ChatViewModel"
@@ -89,6 +86,18 @@ class ChatViewModel(
                 e.printStackTrace()
             }
         }
+    }
+
+    fun getPendingMessages(): MutableLiveData<List<PendingMessage>> {
+        var response: List<PendingMessage>?
+        val res = MutableLiveData<List<PendingMessage>>()
+        viewModelScope.launch {
+            Log.d(TAG, "Fetching pending friend requests")
+            val request = GetPendingMessagesRequest("$username@$server")
+            response = SspdimApi.retrofitService.getPendingMessages(request)
+            res.postValue(response!!)
+        }
+        return res
     }
 }
 

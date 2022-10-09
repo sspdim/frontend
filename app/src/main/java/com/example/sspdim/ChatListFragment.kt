@@ -167,6 +167,18 @@ class ChatListFragment: Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "onResume")
+        val pendingRequests = viewModel.getPendingRequests()
+        pendingRequests.observe(requireActivity()) {
+            it.forEach { request ->
+                Log.d(TAG, "Pending request from ${request.fromUsername}")
+                viewModel.updateFriendsList(request.fromUsername, request.status)
+            }
+        }
+    }
+
     private fun onClickButton() {
         showAddFriendDialog()
     }

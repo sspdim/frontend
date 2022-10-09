@@ -1,6 +1,5 @@
 package com.example.sspdim.network
 
-import com.squareup.moshi.Json
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
@@ -57,5 +56,13 @@ interface SspdimApiService {
     @Headers("Content-Type: application/json")
     @POST("accept-friend")
     suspend fun acceptFriend(@Body requestData: AddFriendRequest): Response
+
+    @Headers("Content-Type: application/json")
+    @POST("pending-friend-requests")
+    suspend fun getPendingFriendRequests(@Body requestData: GetPendingFriendRequestsRequest): List<PendingFriendRequest>
+
+    @Headers("Content-Type: application/json")
+    @POST("pending-messages")
+    suspend fun getPendingMessages(@Body requestData: GetPendingMessagesRequest): List<PendingMessage>
 }
 
