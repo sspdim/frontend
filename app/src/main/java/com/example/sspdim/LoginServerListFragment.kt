@@ -20,6 +20,7 @@ import com.example.sspdim.model.ServerListAdapter
 import com.example.sspdim.network.Response
 import com.example.sspdim.network.setBaseUrl
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.json.JSONException
 
 private const val TAG = "LoginServerListFragment"
@@ -87,10 +88,18 @@ class LoginServerListFragment: Fragment() {
         }
         try {
             if (viewModel.status == Response.STATUS_SUCCESS) {
-                lifecycleScope.launch {
-                    settingsDataStore.saveLoggedInPreference(true, requireContext())
-                    settingsDataStore.saveUsernamePreference(viewModel.username, requireContext())
-                    settingsDataStore.saveServerPreference(selectedServerDomainName, requireContext())
+                runBlocking {
+                    launch {
+                        settingsDataStore.saveLoggedInPreference(true, requireContext())
+                        settingsDataStore.saveUsernamePreference(
+                            viewModel.username,
+                            requireContext()
+                        )
+                        settingsDataStore.saveServerPreference(
+                            selectedServerDomainName,
+                            requireContext()
+                        )
+                    }
                 }
                 startActivity(Intent(requireContext(), ChatActivity::class.java))
             }
