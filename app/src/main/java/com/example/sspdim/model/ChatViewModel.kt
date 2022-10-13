@@ -20,7 +20,7 @@ class ChatViewModel(
     private var username: String = ""
     private var server: String = ""
 
-    val chats: LiveData<List<ChatMessage>> = chatMessageDao.getFriendMessages(friendUsername).asLiveData()
+    lateinit var chats: LiveData<List<ChatMessage>>
 
     val messageIds: MutableSet<Int> = mutableSetOf()
 
@@ -31,6 +31,10 @@ class ChatViewModel(
     fun setServer(server: String) {
         this.server = server
         setBaseUrl("https://$server")
+    }
+
+    fun getChats(username: String) {
+        chats = chatMessageDao.getFriendMessages(username).asLiveData()
     }
 
     fun sendMessage(messageContent: String): LiveData<Int> {

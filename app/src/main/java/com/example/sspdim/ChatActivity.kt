@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContentProviderCompat.requireContext
@@ -73,6 +74,15 @@ class ChatActivity : AppCompatActivity(R.layout.activity_chat) {
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.chat_nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
+    }
+
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStack()
+        }
+        else {
+            super.onBackPressed()
+        }
     }
 
     /*override fun onStart() {

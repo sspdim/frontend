@@ -162,6 +162,7 @@ class ChatListFragment: Fragment() {
             { friend ->
             val action =
                 ChatListFragmentDirections.actionChatListFragmentToChatFragment(friend.username, friend.status)
+            Log.d(TAG, "Clicked on ${friend.username}, navigating")
             this.findNavController().navigate(action)
             },
             { friend ->

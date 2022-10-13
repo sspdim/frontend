@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -39,7 +40,7 @@ class ChatFragment: Fragment() {
     private lateinit var friendUsername: String
     private var friendStatus by Delegates.notNull<Int>()
 
-    private val viewModel: ChatViewModel by activityViewModels {
+    private val viewModel: ChatViewModel by viewModels {
         ChatViewModelFactory(
             (activity?.application as SspdimApplication).database.chatMessageDao(),
             navigationArgs.friendUsername
@@ -117,6 +118,8 @@ class ChatFragment: Fragment() {
         friendUsername = navigationArgs.friendUsername
         friendStatus = navigationArgs.friendStatus
 
+        Log.d(TAG, "View created, friend: $friendUsername")
+
         settingsDataStore = SettingsDataStore(requireContext())
         settingsDataStore.usernamePreference.asLiveData().observe(viewLifecycleOwner) { value ->
             viewModel.setUsername(value)
@@ -136,6 +139,9 @@ class ChatFragment: Fragment() {
             binding.sendButton.visibility = View.VISIBLE
             binding.friendRequestPendingTextView.visibility = View.GONE
         }
+
+        viewModel.getChats(friendUsername)
+
         viewModel.chats.observe(this.viewLifecycleOwner) { items ->
             items.let { it ->
                 items.forEach { msg ->
