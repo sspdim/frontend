@@ -114,25 +114,6 @@ class ChatListViewModel(private val friendDao: FriendDao): ViewModel() {
             }
         }
     }
-
-    /*fun getFriendChats(friendUsername: String) {
-        try {
-            chats = chatMessageDao.getFriendMessages(friendUsername).asLiveData()
-        }
-        catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    fun sendMessage(friendUsername: String, messageContent: String) {
-        val currentTime = System.currentTimeMillis() / 1000
-        val newMessage = ChatMessage(friendUsername, (0..Int.MAX_VALUE).random(),
-            TYPE_MY_MESSAGE, currentTime.toInt(), messageContent, MESSAGE_SENT)
-        Log.d(TAG, newMessage.toString())
-        viewModelScope.launch {
-            chatMessageDao.insert(newMessage)
-        }
-    }*/
 }
 
 class ChatListViewModelFactory(

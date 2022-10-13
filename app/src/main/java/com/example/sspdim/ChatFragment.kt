@@ -9,9 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
@@ -70,7 +68,6 @@ class ChatFragment: Fragment() {
         val bundle = activity?.intent?.extras
         if (bundle != null) {
             Log.d(TAG, "Received Intent1")
-//            bundle.getString("message")?.let { viewModel.addMessage(it) }
             val from = bundle.getString("from")
             val message = bundle.getString("message")
             val messageId = bundle.getString("message_id")

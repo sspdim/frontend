@@ -46,11 +46,11 @@ class ChatMessageAdapter: ListAdapter<ChatMessage, ChatMessageAdapter.ChatMessag
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatMessageViewHolder {
         val context = parent.context
         return when (viewType) {
-            Message.TYPE_MY_MESSAGE -> {
+            ChatMessage.TYPE_MY_MESSAGE -> {
                 val view = LayoutInflater.from(context).inflate(R.layout.my_message_item, parent, false)
                 MyChatMessageViewHolder(view)
             }
-            Message.TYPE_FRIEND_MESSAGE -> {
+            ChatMessage.TYPE_FRIEND_MESSAGE -> {
                 val view = LayoutInflater.from(context).inflate(R.layout.friend_message_item, parent, false)
                 FriendChatMessageViewHolder(view)
             }

@@ -3,25 +3,16 @@ package com.example.sspdim.model
 import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sspdim.databinding.ServerListItemBinding
 import com.example.sspdim.network.Server
-import kotlin.properties.Delegates
 
 class ServerListAdapter(
     private val onClick: (Server) -> Unit
 ): ListAdapter<Server, ServerListAdapter.ServerViewHolder>(DiffCallback) {
-
-//    var selectedPosition by Delegates.observable(-1) { _, oldPos, newPos ->
-//        notifyItemChanged(oldPos)
-//        notifyItemChanged(newPos)
-//    }
 
     companion object DiffCallback : DiffUtil.ItemCallback<Server>() {
 
@@ -51,19 +42,6 @@ class ServerListAdapter(
                 notifyItemChanged(selectedPosition)
                 onClick(server)
             }
-            /*if (selectedPosition == -1 && position == 0) {
-                binding.serverNameRadiobutton.isChecked = true
-            }
-            else {
-                if (selectedPosition == position) {
-                    binding.serverNameRadiobutton.isChecked = true
-                }
-                else {
-                    binding.serverNameRadiobutton.isChecked = false
-                    selectedPosition = adapterPosition
-                    notifyDataSetChanged()
-                }
-            }*/
         }
     }
 
