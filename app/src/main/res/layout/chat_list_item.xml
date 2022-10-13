@@ -31,7 +31,8 @@
                 android:layout_height="48dp"
                 android:src="@drawable/ic_baseline_person_24"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/user_display_picture" />
 
             <TextView
                 android:id="@+id/chat_item_username"
@@ -55,7 +56,8 @@
                 app:srcCompat="@drawable/red_x"
                 android:visibility="gone"
                 app:layout_constraintEnd_toStartOf="@+id/chat_item_accept_button"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/decline_friend_request" />
 
             <ImageButton
                 android:id="@+id/chat_item_accept_button"
@@ -66,7 +68,8 @@
                 android:adjustViewBounds="true"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/accept_friend_request" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

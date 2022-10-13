@@ -19,7 +19,7 @@
             android:id="@+id/friend_request_pending_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Friend request pending"
+            android:text="@string/friend_request_pending"
             android:textColor="@color/white"
             android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"

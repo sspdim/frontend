@@ -23,7 +23,7 @@
             android:id="@+id/add_friend_text_edit_field"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="username@domain.tld"
+            android:hint="@string/username_domain_tld"
             android:inputType="textPersonName|textNoSuggestions" />
     </com.google.android.material.textfield.TextInputLayout>
 

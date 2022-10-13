@@ -6,4 +6,20 @@
     <string name="title_friend_name">Friend\'s Name</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="username_domain_tld">username@domain.tld</string>
+    <string name="user_display_picture">User Display Picture</string>
+    <string name="decline_friend_request">Decline Friend Request</string>
+    <string name="accept_friend_request">Accept Friend Request</string>
+    <string name="friend_request_pending">Friend request pending</string>
+    <string name="add_friend">Add Friend</string>
+    <string name="username">Username</string>
+    <string name="random">RANDOM</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="next">Next</string>
+    <string name="register">Register</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="loading">Loading...</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="confirm_password">Confirm Password</string>
 </resources>
