@@ -76,5 +76,9 @@ interface SspdimApiService {
     @Headers("Content-Type: application/json")
     @POST("keys")
     suspend fun submitKeys(@Body requestData: KeysRequest): Response
+
+    @Headers("Content-Type: application/json")
+    @POST("getkeys")
+    suspend fun getKeys(@Body requestData: GetKeys): Response2
 }
 

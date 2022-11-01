@@ -1,5 +1,6 @@
 package com.example.sspdim.model
 
+import android.util.Base64
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.sspdim.database.ChatMessage
@@ -10,6 +11,8 @@ import com.example.sspdim.database.ChatMessage.Companion.TYPE_MY_MESSAGE
 import com.example.sspdim.database.ChatMessageDao
 import com.example.sspdim.network.*
 import kotlinx.coroutines.launch
+import org.whispersystems.libsignal.protocol.CiphertextMessage
+import java.util.Base64.getEncoder
 
 private const val TAG = "ChatViewModel"
 
@@ -55,9 +58,11 @@ class ChatViewModel(
         messageId is random for now. Intention is to maintain counter to help decrypt messages received out of order.
          */
         Log.d(TAG, newMessage.toString())
+        var sessionModel : SessionModel = SessionModel(username)
+        var encryptedMessage : ByteArray? = sessionModel.encrypt(messageContent.toByteArray())
         viewModelScope.launch {
             try {
-                val request = SendMessageRequest("$username@$server", friendUsername, messageContent, messageId.toString())
+                val request = SendMessageRequest("$username@$server", friendUsername, Base64.encodeToString(encryptedMessage, Base64.DEFAULT), messageId.toString())
                 Log.d(TAG, "${request.to}, ${request.from}, ${request.message}")
                 response = SspdimApi.retrofitService.sendMessage(request)
                 res.postValue(response?.status)
