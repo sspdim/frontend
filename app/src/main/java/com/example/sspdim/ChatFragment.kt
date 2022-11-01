@@ -22,6 +22,7 @@ import com.example.sspdim.databinding.FragmentChatBinding
 import com.example.sspdim.model.ChatMessageAdapter
 import com.example.sspdim.model.ChatViewModel
 import com.example.sspdim.model.ChatViewModelFactory
+import com.example.sspdim.model.SessionModel
 import kotlin.properties.Delegates
 
 private const val TAG = "ChatFragment"
@@ -54,11 +55,14 @@ class ChatFragment: Fragment() {
                 val from = bundle?.getString("from")
                 val message = bundle?.getString("message")
                 val messageId = bundle?.getString("message_id")
-                Log.d(TAG, "From: $from, message: $message, message_id: $messageId}")
+                Log.d(TAG, "From: $from, message: ${message!!.toByteArray()}, message_id: $messageId}")
+                var sessionModel : SessionModel = SessionModel(from.toString().split('@')[0])
+                var decryptedMessage : String = sessionModel.decrypt(message)
+                Log.d(TAG, "From: $from, message: $decryptedMessage, message_id: $messageId}")
                 if (from != null &&
                     message != null &&
                     messageId != null) {
-                    viewModel.addMessage(from, message, messageId)
+                    viewModel.addMessage(from, decryptedMessage, messageId)
                 }
             }
         }
@@ -157,7 +161,9 @@ class ChatFragment: Fragment() {
         pendingRequests.observe(requireActivity()) {
             it.forEach { request ->
                 Log.d(TAG, "Pending request from ${request.fromUsername}")
-                viewModel.addMessage(request.fromUsername, request.messageContent, request.messageId)
+                var sessionModel : SessionModel = SessionModel(request.fromUsername.toString().split('@')[0])
+                var decryptedMessage : String = sessionModel.decrypt(request.messageContent)
+                viewModel.addMessage(request.fromUsername, decryptedMessage, request.messageId)
             }
         }
     }
