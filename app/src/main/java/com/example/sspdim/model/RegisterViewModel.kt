@@ -30,7 +30,7 @@ class RegisterViewModel: ViewModel() {
         this.confirmPassword = confirmPassword
     }
 
-    fun submitRegisterDetails() {
+    fun submitRegisterDetails(): String {
         resetStatus()
         Log.d("sdvsd", "$username, $password")
         val request = LoginRegisterRequest(username, password)
@@ -46,6 +46,7 @@ class RegisterViewModel: ViewModel() {
                 }
             }
         }
+        return username
     }
 
     fun getServerDetails() {

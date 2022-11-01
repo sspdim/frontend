@@ -71,4 +71,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
+    // Signal Protocol
+    implementation 'org.whispersystems:signal-protocol-android:2.8.1'
+
 }

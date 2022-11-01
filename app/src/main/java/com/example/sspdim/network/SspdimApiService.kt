@@ -72,5 +72,9 @@ interface SspdimApiService {
     @Headers("Content-Type: application/json")
     @POST("pending-messages")
     suspend fun getPendingMessages(@Body requestData: GetPendingMessagesRequest): List<PendingMessage>
+
+    @Headers("Content-Type: application/json")
+    @POST("keys")
+    suspend fun submitKeys(@Body requestData: KeysRequest): Response
 }
 

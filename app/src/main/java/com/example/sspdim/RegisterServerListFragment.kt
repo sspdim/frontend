@@ -13,6 +13,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.sspdim.data.SettingsDataStore
 import com.example.sspdim.databinding.FragmentRegisterServerListBinding
+import com.example.sspdim.model.KeysModel
 import com.example.sspdim.model.RegisterViewModel
 import com.example.sspdim.model.ServerListAdapter
 import com.example.sspdim.network.Response
@@ -74,9 +75,12 @@ class RegisterServerListFragment: Fragment() {
             return
         }
         setBaseUrl("https://$selectedServerDomainName")
-        viewModel.submitRegisterDetails()
+        var username : String = viewModel.submitRegisterDetails()
+        var key : KeysModel = KeysModel(requireContext(), username)
+        key.addKeys()
+        var keyStatus = key.submitKeysDetails()
         Log.d("srg", "${viewModel.status}, ${viewModel.message}; ${viewModel.response?.message}, ${viewModel.response?.status}")
-        if (viewModel.status > 0) {
+        if (viewModel.status > 0 && keyStatus == 200) {
             try {
                 Toast.makeText(
                     requireContext(),
