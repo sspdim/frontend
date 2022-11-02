@@ -28,7 +28,7 @@ class LoginViewModel: ViewModel() {
         this.password = password
     }
 
-    fun submitLoginDetails() {
+    fun submitLoginDetails(): String {
         resetStatus()
         val request = LoginRegisterRequest(username, password)
         runBlocking {
@@ -42,6 +42,7 @@ class LoginViewModel: ViewModel() {
                 }
             }
         }
+        return username
     }
 
     fun getServerDetails() {

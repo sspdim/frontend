@@ -13,6 +13,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.sspdim.data.SettingsDataStore
 import com.example.sspdim.databinding.FragmentLoginServerListBinding
+import com.example.sspdim.model.KeysModel
 import com.example.sspdim.model.LoginViewModel
 import com.example.sspdim.model.ServerListAdapter
 import com.example.sspdim.network.Response
@@ -72,8 +73,11 @@ class LoginServerListFragment: Fragment() {
             return
         }
         setBaseUrl("https://$selectedServerDomainName")
-        viewModel.submitLoginDetails()
-        if (viewModel.status > 0) {
+        var username = viewModel.submitLoginDetails()
+        var key : KeysModel = KeysModel(requireContext(), username)
+        key.addKeys()
+        var keyStatus = key.submitKeysDetails()
+        if (viewModel.status > 0 && keyStatus == 200) {
             try {
                 Toast.makeText(
                     requireContext(),
