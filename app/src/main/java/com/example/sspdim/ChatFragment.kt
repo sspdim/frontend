@@ -38,6 +38,8 @@ class ChatFragment: Fragment() {
 
     private lateinit var friendUsername: String
     private var friendStatus by Delegates.notNull<Int>()
+    private lateinit var username : String
+    private lateinit var server : String
 
     private val viewModel: ChatViewModel by viewModels {
         ChatViewModelFactory(
@@ -56,7 +58,7 @@ class ChatFragment: Fragment() {
                 val message = bundle?.getString("message")
                 val messageId = bundle?.getString("message_id")
                 Log.d(TAG, "From: $from, message: ${message!!.toByteArray()}, message_id: $messageId}")
-                var sessionModel : SessionModel = SessionModel(from.toString().split('@')[0])
+                var sessionModel : SessionModel = SessionModel("$username@$server")
                 var decryptedMessage : String = sessionModel.decrypt(message)
                 Log.d(TAG, "From: $from, message: $decryptedMessage, message_id: $messageId}")
                 if (from != null &&
@@ -124,9 +126,11 @@ class ChatFragment: Fragment() {
         settingsDataStore = SettingsDataStore(requireContext())
         settingsDataStore.usernamePreference.asLiveData().observe(viewLifecycleOwner) { value ->
             viewModel.setUsername(value)
+            this.username = value
         }
         settingsDataStore.serverPreference.asLiveData().observe(viewLifecycleOwner) { value ->
             viewModel.setServer(value)
+            this.server = value
         }
 
         val adapter = ChatMessageAdapter()
@@ -161,7 +165,7 @@ class ChatFragment: Fragment() {
         pendingRequests.observe(requireActivity()) {
             it.forEach { request ->
                 Log.d(TAG, "Pending request from ${request.fromUsername}")
-                var sessionModel : SessionModel = SessionModel(request.fromUsername.toString().split('@')[0])
+                var sessionModel : SessionModel = SessionModel("$username@$server")
                 var decryptedMessage : String = sessionModel.decrypt(request.messageContent)
                 viewModel.addMessage(request.fromUsername, decryptedMessage, request.messageId)
             }

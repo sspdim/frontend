@@ -55,7 +55,7 @@ class ChatViewModel(
         messageId is random for now. Intention is to maintain counter to help decrypt messages received out of order.
          */
         Log.d(TAG, newMessage.toString())
-        var sessionModel : SessionModel = SessionModel(username)
+        var sessionModel : SessionModel = SessionModel(friendUsername)
         var encryptedMessage : String? = sessionModel.encrypt(messageContent.toByteArray())
         viewModelScope.launch {
             try {
