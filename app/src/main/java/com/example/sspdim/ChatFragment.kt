@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
@@ -58,13 +59,20 @@ class ChatFragment: Fragment() {
                 val message = bundle?.getString("message")
                 val messageId = bundle?.getString("message_id")
                 Log.d(TAG, "From: $from, message: ${message!!.toByteArray()}, message_id: $messageId}")
-                var sessionModel : SessionModel = SessionModel("$username@$server")
-                var decryptedMessage : String = sessionModel.decrypt(message)
-                Log.d(TAG, "From: $from, message: $decryptedMessage, message_id: $messageId}")
-                if (from != null &&
-                    message != null &&
-                    messageId != null) {
-                    viewModel.addMessage(from, decryptedMessage, messageId)
+                try {
+                    var sessionModel: SessionModel = SessionModel("$username@$server")
+                    var decryptedMessage: String = sessionModel.decrypt(message)
+                    Log.d(TAG, "From: $from, message: $decryptedMessage, message_id: $messageId}")
+                    if (from != null &&
+                        message != null &&
+                        messageId != null
+                    ) {
+                        viewModel.addMessage(from, decryptedMessage, messageId)
+                    }
+                }
+                catch (e: Exception) {
+                    Toast.makeText(requireContext(), "Your server is down", Toast.LENGTH_SHORT).show()
+                    e.printStackTrace()
                 }
             }
         }
@@ -94,7 +102,13 @@ class ChatFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.sendButton.setOnClickListener {
-            onClickSend()
+            try {
+                onClickSend()
+            }
+            catch (e: Exception) {
+                Toast.makeText(requireContext(), "Receiver server down", Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
+            }
         }
 
         activity?.let {
@@ -165,9 +179,15 @@ class ChatFragment: Fragment() {
         pendingRequests.observe(requireActivity()) {
             it.forEach { request ->
                 Log.d(TAG, "Pending request from ${request.fromUsername}")
-                var sessionModel : SessionModel = SessionModel("$username@$server")
-                var decryptedMessage : String = sessionModel.decrypt(request.messageContent)
-                viewModel.addMessage(request.fromUsername, decryptedMessage, request.messageId)
+                try {
+                    var sessionModel: SessionModel = SessionModel("$username@$server")
+                    var decryptedMessage: String = sessionModel.decrypt(request.messageContent)
+                    viewModel.addMessage(request.fromUsername, decryptedMessage, request.messageId)
+                }
+                catch (e: Exception) {
+                    Toast.makeText(requireContext(), "Your server is down", Toast.LENGTH_SHORT).show()
+                    e.printStackTrace()
+                }
             }
         }
     }
