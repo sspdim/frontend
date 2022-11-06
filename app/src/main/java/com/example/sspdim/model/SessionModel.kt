@@ -23,11 +23,6 @@ class SessionModel(username: String) {
     private var message: String = ""
     private var response: Response2? = null
     private var username : String = username
-    enum class operation{
-        Encrypt,
-        Decrypt
-    }
-    private lateinit var lastOperation : operation
 
     private var registrationId : Int = 0
     private lateinit var identityKeyPair : ByteArray
@@ -40,10 +35,7 @@ class SessionModel(username: String) {
     private lateinit var sessionBuilder : SessionBuilder
     private lateinit var sessionCipher : SessionCipher
 
-    private fun session(operation: operation) {
-        if (operation == lastOperation) {
-            return
-        }
+    private fun session() {
         var preKey = PreKeyRecord(preKey)
         var signedPreKey = SignedPreKeyRecord(signedPreKey)
         var identityKeyPair = IdentityKeyPair(identityKeyPair)
@@ -78,19 +70,17 @@ class SessionModel(username: String) {
     }
 
     fun encrypt(message: ByteArray): String? {
-        lastOperation = operation.Encrypt
         getKeysDetails()
-        session(lastOperation)
+        session()
         var encryptedMessage : CiphertextMessage = sessionCipher.encrypt(message)
         var preKeySignalmessage : PreKeySignalMessage = PreKeySignalMessage(encryptedMessage.serialize())
         return Base64.encodeToString(preKeySignalmessage.serialize(), Base64.DEFAULT)
     }
 
     fun decrypt(message: String): String {
-        lastOperation = operation.Decrypt
         var message : ByteArray = Base64.decode(message, Base64.DEFAULT)
         getKeysDetails()
-        session(lastOperation)
+        session()
         var decryptedMessage : ByteArray = sessionCipher.decrypt(PreKeySignalMessage(message))
         return String(decryptedMessage, StandardCharsets.UTF_8)
     }
