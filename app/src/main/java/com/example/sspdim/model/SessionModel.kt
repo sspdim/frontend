@@ -23,6 +23,7 @@ class SessionModel(username: String) {
     private var message: String = ""
     private var response: Response2? = null
     private var username : String = username
+    private var numberOfPrekeys: Int = 0
 
     private var registrationId : Int = 0
     private lateinit var identityKeyPair : ByteArray
@@ -61,6 +62,7 @@ class SessionModel(username: String) {
                     signedPreKey = response!!.signedprekey
                     preKey = response!!.prekey
                     preKeys = response!!.prekeys
+                    numberOfPrekeys = response!!.numberOfPrekeys
                 }
                 catch (e: Exception) {
                     e.printStackTrace()
@@ -80,6 +82,10 @@ class SessionModel(username: String) {
     fun decrypt(message: String): String {
         var message : ByteArray = Base64.decode(message, Base64.DEFAULT)
         getKeysDetails()
+        if (numberOfPrekeys < 5) {
+            var keysModel = KeysModel(username)
+            keysModel.submitPrekeys()
+        }
         session()
         var decryptedMessage : ByteArray = sessionCipher.decrypt(PreKeySignalMessage(message))
         return String(decryptedMessage, StandardCharsets.UTF_8)

@@ -80,5 +80,9 @@ interface SspdimApiService {
     @Headers("Content-Type: application/json")
     @POST("getkeys")
     suspend fun getKeys(@Body requestData: GetKeys): Response2
+
+    @Headers("Content-Type: application/json")
+    @POST("insertprekeys")
+    suspend fun submitPrekeys(@Body requestData: PrekeysRequest): Response
 }
 

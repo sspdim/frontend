@@ -5,6 +5,7 @@ import android.util.Log
 import com.example.sspdim.database.AppDatabase
 import com.example.sspdim.database.Keys
 import com.example.sspdim.network.KeysRequest
+import com.example.sspdim.network.PrekeysRequest
 import com.example.sspdim.network.Response
 import com.example.sspdim.network.SspdimApi
 import kotlinx.coroutines.launch
@@ -14,7 +15,13 @@ import org.whispersystems.libsignal.state.PreKeyRecord
 import org.whispersystems.libsignal.state.SignedPreKeyRecord
 import org.whispersystems.libsignal.util.KeyHelper
 
-class KeysModel(context : Context, username : String) {
+class KeysModel(username : String) {
+
+    constructor(context1: Context, username: String) : this(username) {
+        context = context1
+    }
+
+    private lateinit var context: Context
 
     private var status: Int = 0
     private var message: String = ""
@@ -60,6 +67,25 @@ class KeysModel(context : Context, username : String) {
             }
         }
         return status
+    }
+
+    fun submitPrekeys() {
+        preKeys = KeyHelper.generatePreKeys(1, 100)
+        preKeys.forEach{key -> keys.add(key.serialize())}
+        val request = PrekeysRequest(username, keys)
+        runBlocking {
+            launch {
+                try {
+                    response = SspdimApi.retrofitService.submitPrekeys(request)
+                    status = response!!.status
+                    message = response!!.message
+                    Log.d("SKD", "$status")
+                }
+                catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 
     private fun resetStatus() {
