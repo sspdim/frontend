@@ -1,5 +1,6 @@
 package com.example.sspdim.model
 
+import android.content.Context
 import android.util.Base64
 import com.example.sspdim.network.GetKeys
 import com.example.sspdim.network.Response2
@@ -79,12 +80,12 @@ class SessionModel(username: String) {
         return Base64.encodeToString(preKeySignalmessage.serialize(), Base64.DEFAULT)
     }
 
-    fun decrypt(message: String): String {
+    fun decrypt(context: Context, message: String): String {
         var message : ByteArray = Base64.decode(message, Base64.DEFAULT)
         getKeysDetails()
         if (numberOfPrekeys < 5) {
-            var keysModel = KeysModel(username)
-            keysModel.submitPrekeys()
+            var keysModel = KeysModel(context, username)
+            keysModel.addPrekeys()
         }
         session()
         var decryptedMessage : ByteArray = sessionCipher.decrypt(PreKeySignalMessage(message))

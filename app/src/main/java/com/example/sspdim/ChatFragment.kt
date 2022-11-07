@@ -61,7 +61,7 @@ class ChatFragment: Fragment() {
                 Log.d(TAG, "From: $from, message: ${message!!.toByteArray()}, message_id: $messageId}")
                 try {
                     var sessionModel: SessionModel = SessionModel("$username@$server")
-                    var decryptedMessage: String = sessionModel.decrypt(message)
+                    var decryptedMessage: String = sessionModel.decrypt(requireContext(), message)
                     Log.d(TAG, "From: $from, message: $decryptedMessage, message_id: $messageId}")
                     if (from != null &&
                         message != null &&
@@ -181,7 +181,7 @@ class ChatFragment: Fragment() {
                 Log.d(TAG, "Pending request from ${request.fromUsername}")
                 try {
                     var sessionModel: SessionModel = SessionModel("$username@$server")
-                    var decryptedMessage: String = sessionModel.decrypt(request.messageContent)
+                    var decryptedMessage: String = sessionModel.decrypt(requireContext(), request.messageContent)
                     viewModel.addMessage(request.fromUsername, decryptedMessage, request.messageId)
                 }
                 catch (e: Exception) {

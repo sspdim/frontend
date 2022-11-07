@@ -52,6 +52,23 @@ class KeysModel(username : String) {
         }
     }
 
+    fun addPrekeys() {
+        preKeys = KeyHelper.generatePreKeys(1, 100)
+        preKeys.forEach { key -> keysAsString.add(key.serialize().toString()) }
+        runBlocking {
+            try {
+                val currentPrekeys = database.keysDao().getPrekeys()
+                currentPrekeys.forEach { key -> keysAsString.add(key) }
+                database.keysDao().updatePrekeys(keysAsString)
+                Log.d("Keys", "$keys")
+            }
+            catch (e : Exception) {
+                e.printStackTrace()
+            }
+        }
+        submitPrekeys(preKeys)
+    }
+
     fun submitKeysDetails(): Int {
         resetStatus()
         val request = KeysRequest(username, identityKeyPair.serialize(), registrationId, keys, signedPreKey.serialize())
@@ -71,8 +88,7 @@ class KeysModel(username : String) {
         return status
     }
 
-    fun submitPrekeys() {
-        preKeys = KeyHelper.generatePreKeys(1, 100)
+    fun submitPrekeys(preKeys: List<PreKeyRecord>) {
         preKeys.forEach{key -> keys.add(key.serialize())}
         val request = PrekeysRequest(username, keys)
         runBlocking {
