@@ -18,6 +18,7 @@ abstract class AppDatabase: RoomDatabase() {
         private var INSTANCE: AppDatabase? = null
 
         fun getDatabase(context: Context): AppDatabase {
+            var converter = Converters()
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
@@ -25,6 +26,7 @@ abstract class AppDatabase: RoomDatabase() {
                     "app_database"
                 )
                     .fallbackToDestructiveMigration()
+                    .addTypeConverter(converter)
                     .build()
                 INSTANCE = instance
                 instance

@@ -74,4 +74,7 @@ dependencies {
     // Signal Protocol
     implementation 'org.whispersystems:signal-protocol-android:2.8.1'
 
+    // GSON
+    implementation 'com.google.code.gson:gson:2.8.5'
+
 }

@@ -35,10 +35,12 @@ class KeysModel(username : String) {
 
     var database = AppDatabase.getDatabase(context)
     var keys : ArrayList<ByteArray> = ArrayList()
+    var keysAsString : ArrayList<String> = ArrayList()
 
     fun addKeys() {
         preKeys.forEach{key -> keys.add(key.serialize())}
-        var keys = Keys(identityKeyPair.serialize(), registrationId, signedPreKey.serialize())
+        preKeys.forEach{key -> keysAsString.add(key.serialize().toString())}
+        var keys = Keys(identityKeyPair.serialize(), registrationId, keysAsString, signedPreKey.serialize())
         runBlocking {
             try {
                 database.keysDao().insert(keys)

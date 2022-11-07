@@ -2,7 +2,7 @@ package com.example.sspdim.database
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import org.whispersystems.libsignal.state.PreKeyRecord
+import androidx.room.TypeConverters
 
 @Entity(tableName = "keys", primaryKeys = ["registrationId"])
 data class Keys(
@@ -10,8 +10,9 @@ data class Keys(
     val identityKeyPair: ByteArray,
     @ColumnInfo(name = "registrationId")
     val registrationId: Int,
-//    @ColumnInfo(name = "preKeys")
-//    val preKeys: List<ByteArray>,
+    @field:TypeConverters(Converters::class)
+    @ColumnInfo(name = "preKeys")
+    val preKeys: List<String>,
     @ColumnInfo(name = "signedPreKey")
     val signedPreKey: ByteArray
 )
