@@ -15,13 +15,7 @@ import org.whispersystems.libsignal.state.PreKeyRecord
 import org.whispersystems.libsignal.state.SignedPreKeyRecord
 import org.whispersystems.libsignal.util.KeyHelper
 
-class KeysModel(username : String) {
-
-    constructor(context1: Context, username: String) : this(username) {
-        context = context1
-    }
-
-    private lateinit var context: Context
+class KeysModel(context: Context, username : String) {
 
     private var status: Int = 0
     private var message: String = ""
@@ -109,5 +103,11 @@ class KeysModel(username : String) {
     private fun resetStatus() {
         status = 0
         message = ""
+    }
+
+    fun getPrekeys(): ArrayList<ByteArray> {
+        val preKeys = database.keysDao().getPrekeys()
+        preKeys.forEach { key -> keys.add(key.toByteArray())}
+        return keys
     }
 }

@@ -8,6 +8,5 @@ data class Response2 (
     @Json(name = "identitykeypair") val identitykeypair: ByteArray,
     @Json(name = "prekey") val prekey: ByteArray,
     @Json(name = "signedprekey") val signedprekey: ByteArray,
-    @Json(name = "prekeys") val prekeys: List<ByteArray>,
     @Json(name = "number_of_prekeys") val numberOfPrekeys: Int
 )

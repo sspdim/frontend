@@ -62,7 +62,6 @@ class SessionModel(username: String) {
                     identityKeyPair = response!!.identitykeypair
                     signedPreKey = response!!.signedprekey
                     preKey = response!!.prekey
-                    preKeys = response!!.prekeys
                     numberOfPrekeys = response!!.numberOfPrekeys
                 }
                 catch (e: Exception) {
@@ -72,8 +71,10 @@ class SessionModel(username: String) {
         }
     }
 
-    fun encrypt(message: ByteArray): String? {
+    fun encrypt(context: Context, message: ByteArray): String? {
         getKeysDetails()
+        val keysModel = KeysModel(context, username)
+        preKeys = keysModel.getPrekeys()
         session()
         var encryptedMessage : CiphertextMessage = sessionCipher.encrypt(message)
         var preKeySignalmessage : PreKeySignalMessage = PreKeySignalMessage(encryptedMessage.serialize())
@@ -82,11 +83,12 @@ class SessionModel(username: String) {
 
     fun decrypt(context: Context, message: String): String {
         var message : ByteArray = Base64.decode(message, Base64.DEFAULT)
+        val keysModel = KeysModel(context, username)
         getKeysDetails()
         if (numberOfPrekeys < 5) {
-            var keysModel = KeysModel(context, username)
             keysModel.addPrekeys()
         }
+        preKeys = keysModel.getPrekeys()
         session()
         var decryptedMessage : ByteArray = sessionCipher.decrypt(PreKeySignalMessage(message))
         return String(decryptedMessage, StandardCharsets.UTF_8)

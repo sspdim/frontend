@@ -55,11 +55,9 @@ class ChatViewModel(
         messageId is random for now. Intention is to maintain counter to help decrypt messages received out of order.
          */
         Log.d(TAG, newMessage.toString())
-        var sessionModel : SessionModel = SessionModel(friendUsername)
-        var encryptedMessage : String? = sessionModel.encrypt(messageContent.toByteArray())
         viewModelScope.launch {
             try {
-                val request = SendMessageRequest("$username@$server", friendUsername, encryptedMessage!!, messageId.toString())
+                val request = SendMessageRequest("$username@$server", friendUsername, messageContent, messageId.toString())
                 Log.d(TAG, "${request.to}, ${request.from}, ${request.message}")
                 response = SspdimApi.retrofitService.sendMessage(request)
                 res.postValue(response?.status)
