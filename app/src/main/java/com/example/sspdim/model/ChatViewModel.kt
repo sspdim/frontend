@@ -1,5 +1,6 @@
 package com.example.sspdim.model
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.sspdim.database.ChatMessage
@@ -37,7 +38,7 @@ class ChatViewModel(
         chats = chatMessageDao.getFriendMessages(username).asLiveData()
     }
 
-    fun sendMessage(messageContent: String): LiveData<Int> {
+    fun sendMessage(context: Context, messageContent: String): LiveData<Int> {
         var response: Response?
         val res = MutableLiveData<Int>()
         val currentTime = System.currentTimeMillis() / 1000
@@ -55,9 +56,11 @@ class ChatViewModel(
         messageId is random for now. Intention is to maintain counter to help decrypt messages received out of order.
          */
         Log.d(TAG, newMessage.toString())
+        val sessionModel: SessionModel = SessionModel(friendUsername)
+        val encryptedMessage: String? = sessionModel.encrypt(context, messageContent.toByteArray())
         viewModelScope.launch {
             try {
-                val request = SendMessageRequest("$username@$server", friendUsername, messageContent, messageId.toString())
+                val request = SendMessageRequest("$username@$server", friendUsername, encryptedMessage!!, messageId.toString())
                 Log.d(TAG, "${request.to}, ${request.from}, ${request.message}")
                 response = SspdimApi.retrofitService.sendMessage(request)
                 res.postValue(response?.status)

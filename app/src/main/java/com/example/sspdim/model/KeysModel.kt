@@ -1,8 +1,10 @@
 package com.example.sspdim.model
 
 import android.content.Context
+import android.util.Base64
 import android.util.Log
 import com.example.sspdim.database.AppDatabase
+import com.example.sspdim.database.Converters
 import com.example.sspdim.database.Keys
 import com.example.sspdim.network.KeysRequest
 import com.example.sspdim.network.PrekeysRequest
@@ -33,7 +35,7 @@ class KeysModel(context: Context, username : String) {
 
     fun addKeys() {
         preKeys.forEach{key -> keys.add(key.serialize())}
-        preKeys.forEach{key -> keysAsString.add(key.serialize().toString())}
+        preKeys.forEach{key -> keysAsString.add(Base64.encodeToString(key.serialize(), Base64.DEFAULT))}
         var keys = Keys(identityKeyPair.serialize(), registrationId, keysAsString, signedPreKey.serialize())
         runBlocking {
             try {
@@ -51,7 +53,8 @@ class KeysModel(context: Context, username : String) {
         preKeys.forEach { key -> keysAsString.add(key.serialize().toString()) }
         runBlocking {
             try {
-                val currentPrekeys = database.keysDao().getPrekeys()
+                val converter = Converters()
+                val currentPrekeys = converter.jsonToList(database.keysDao().getPrekeys())
                 currentPrekeys.forEach { key -> keysAsString.add(key) }
                 database.keysDao().updatePrekeys(keysAsString)
                 Log.d("Keys", "$keys")
@@ -106,8 +109,9 @@ class KeysModel(context: Context, username : String) {
     }
 
     fun getPrekeys(): ArrayList<ByteArray> {
-        val preKeys = database.keysDao().getPrekeys()
-        preKeys.forEach { key -> keys.add(key.toByteArray())}
+        val converter = Converters()
+        val preKeys = converter.jsonToList(database.keysDao().getPrekeys())
+        preKeys.forEach { key -> keys.add(Base64.decode(key, Base64.DEFAULT))}
         return keys
     }
 }

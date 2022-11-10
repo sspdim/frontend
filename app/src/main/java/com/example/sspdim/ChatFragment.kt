@@ -202,17 +202,9 @@ class ChatFragment: Fragment() {
         Log.d(TAG, "Message: $enteredMessage")
         binding.enterMessageTextInput.setText("")
         if (enteredMessage.isNotEmpty()) {
-            try {
-                val sessionModel: SessionModel = SessionModel(friendUsername)
-                val encryptedMessage: String? =
-                    sessionModel.encrypt(requireContext(), enteredMessage.toByteArray())
-                val resp: LiveData<Int> = viewModel.sendMessage(encryptedMessage!!)
-                resp.observe(requireActivity()) { value ->
-                    Log.d(TAG, "Response from server: ${resp.value}")
-                }
-            }
-            catch (e: Exception) {
-                e.printStackTrace()
+            val resp: LiveData<Int> = viewModel.sendMessage(requireContext(), enteredMessage)
+            resp.observe(requireActivity()) { value ->
+                Log.d(TAG, "Response from server: ${resp.value}")
             }
         }
     }

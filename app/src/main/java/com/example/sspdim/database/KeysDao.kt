@@ -10,7 +10,7 @@ interface KeysDao {
     suspend fun insert(keys: Keys)
 
     @Query("select preKeys from keys")
-    fun getPrekeys(): List<String>
+    fun getPrekeys(): String
 
     @Query("update keys set preKeys = :preKeys")
     suspend fun updatePrekeys(preKeys: List<String>)
