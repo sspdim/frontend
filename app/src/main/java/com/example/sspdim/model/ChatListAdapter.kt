@@ -1,5 +1,6 @@
 package com.example.sspdim.model
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +11,11 @@ import com.example.sspdim.database.Friend
 import com.example.sspdim.database.Friend.Companion.FRIEND_REQUEST_PENDING
 import com.example.sspdim.databinding.ChatListItemBinding
 
+private const val TAG = "ChatListAdapter"
+
 class ChatListAdapter(
     private val onItemClicked: (Friend) -> Unit,
+    private val onItemLongClick: (Friend) ->Unit,
     private val onAccept: (Friend) -> Unit,
     private val onDecline: (Friend) -> Unit
 ): ListAdapter<Friend, ChatListAdapter.ChatViewHolder>(DiffCallback) {
@@ -58,6 +62,11 @@ class ChatListAdapter(
         val friend = getItem(position)
         holder.itemView.setOnClickListener {
             onItemClicked(friend)
+        }
+        holder.itemView.setOnLongClickListener {
+            Log.d(TAG, "Long click")
+            onItemLongClick(friend)
+            return@setOnLongClickListener true
         }
         holder.bind(friend)
     }

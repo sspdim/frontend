@@ -2,6 +2,7 @@ package com.example.sspdim.model
 
 import android.util.Log
 import androidx.lifecycle.*
+import com.example.sspdim.database.ChatMessageDao
 import com.example.sspdim.database.Friend
 import com.example.sspdim.database.Friend.Companion.FRIEND_REQUEST_ACCEPTED
 import com.example.sspdim.database.Friend.Companion.FRIEND_REQUEST_PENDING
@@ -9,10 +10,12 @@ import com.example.sspdim.database.Friend.Companion.FRIEND_REQUEST_SENT
 import com.example.sspdim.database.FriendDao
 import com.example.sspdim.network.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 private const val TAG = "ChatListViewModel"
 
-class ChatListViewModel(private val friendDao: FriendDao): ViewModel() {
+class ChatListViewModel(private val friendDao: FriendDao,
+                        private val chatMessageDao: ChatMessageDao): ViewModel() {
 
     private var username: String = ""
     private var server: String = ""
@@ -114,14 +117,22 @@ class ChatListViewModel(private val friendDao: FriendDao): ViewModel() {
             }
         }
     }
+
+    fun removeFriend(friendUsername: String) {
+        viewModelScope.launch {
+            Log.d(TAG, "Removing Friend")
+            friendDao.deleteFriend(friendUsername)
+        }
+    }
 }
 
 class ChatListViewModelFactory(
-    private val friendDao: FriendDao) : ViewModelProvider.Factory {
+    private val friendDao: FriendDao,
+    private val chatMessageDao: ChatMessageDao) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ChatListViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return ChatListViewModel(friendDao) as T
+            return ChatListViewModel(friendDao, chatMessageDao) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

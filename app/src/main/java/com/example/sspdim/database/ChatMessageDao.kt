@@ -25,4 +25,7 @@ interface ChatMessageDao {
 
     @Query("update chats set status = $MESSAGE_RECEIVED where (timestamp < :timestamp and status = $MESSAGE_SENT)")
     fun updateMessages(timestamp: Int)
+
+    @Query("delete from chats where friend_username=:friendUsername")
+    fun deleteFriendChats(friendUsername: String)
 }

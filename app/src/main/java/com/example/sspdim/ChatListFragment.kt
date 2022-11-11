@@ -42,7 +42,8 @@ class ChatListFragment: Fragment() {
 
     private val viewModel: ChatListViewModel by activityViewModels {
         ChatListViewModelFactory(
-            (activity?.application as SspdimApplication).database.friendDao()
+            (activity?.application as SspdimApplication).database.friendDao(),
+            (activity?.application as SspdimApplication).database.chatMessageDao()
         )
     }
 
@@ -164,6 +165,17 @@ class ChatListFragment: Fragment() {
                 ChatListFragmentDirections.actionChatListFragmentToChatFragment(friend.username, friend.status)
             Log.d(TAG, "Clicked on ${friend.username}, navigating")
             this.findNavController().navigate(action)
+            },
+            { friend ->
+                /*MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Warning")
+                    .setMessage("This action is not reversible. Are you sure you want to remove this friend?")
+                    .setCancelable(false)
+                    .setNegativeButton("No") { _, _ -> }
+                    .setPositiveButton("Yes") { _, _ ->
+                        viewModel.removeFriend(friend.username)
+                    }*/
+                viewModel.removeFriend(friend.username)
             },
             { friend ->
                 viewModel.acceptFriendRequest(friend.username)
