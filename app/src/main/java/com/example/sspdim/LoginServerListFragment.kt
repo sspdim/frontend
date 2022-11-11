@@ -17,7 +17,6 @@ import com.example.sspdim.model.KeysModel
 import com.example.sspdim.model.LoginViewModel
 import com.example.sspdim.model.ServerListAdapter
 import com.example.sspdim.network.Response
-import com.example.sspdim.network.setBaseUrl
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.json.JSONException
@@ -30,8 +29,6 @@ class LoginServerListFragment: Fragment() {
 
     private val viewModel: LoginViewModel by activityViewModels()
 
-    private var selectedServerDomainName: String = ""
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,8 +37,8 @@ class LoginServerListFragment: Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.serversRecyclerView.adapter = ServerListAdapter { server ->
-            selectedServerDomainName = server.domainName
-            Log.d(TAG, "Selected server: $selectedServerDomainName")
+            viewModel.selectedServerDomainName = server.domainName
+            Log.d(TAG, "Selected server: $viewModel.selectedServerDomainName")
         }
         binding.loginButton.setOnClickListener {
             onClickLogin()
@@ -59,8 +56,8 @@ class LoginServerListFragment: Fragment() {
 
     @SuppressLint("LongLogTag")
     private fun onClickLogin() {
-        Log.d(TAG, "Selected server: $selectedServerDomainName")
-        if (selectedServerDomainName.isEmpty()) {
+        Log.d(TAG, "Selected server: $viewModel.selectedServerDomainName")
+        if (viewModel.selectedServerDomainName.isEmpty()) {
             try {
                 Toast.makeText(
                     requireContext(),
@@ -72,7 +69,7 @@ class LoginServerListFragment: Fragment() {
             }
             return
         }
-        setBaseUrl("https://$selectedServerDomainName")
+        viewModel.setBaseDomain()
         var username = viewModel.submitLoginDetails()
         var key : KeysModel = KeysModel(requireContext(), username)
         key.addKeys()
@@ -98,7 +95,7 @@ class LoginServerListFragment: Fragment() {
                             requireContext()
                         )
                         settingsDataStore.saveServerPreference(
-                            selectedServerDomainName,
+                            viewModel.selectedServerDomainName,
                             requireContext()
                         )
                     }

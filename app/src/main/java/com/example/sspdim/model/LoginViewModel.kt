@@ -4,10 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sspdim.network.LoginRegisterRequest
-import com.example.sspdim.network.Response
-import com.example.sspdim.network.Server
-import com.example.sspdim.network.SspdimApi
+import com.example.sspdim.network.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.Exception
@@ -22,6 +19,8 @@ class LoginViewModel: ViewModel() {
 
     private val _servers = MutableLiveData<List<Server>>()
     val servers: LiveData<List<Server>> = _servers
+
+    var selectedServerDomainName: String = ""
 
     fun initData(username: String, password: String) {
         this.username = username
@@ -60,5 +59,9 @@ class LoginViewModel: ViewModel() {
     private fun resetStatus() {
         status = 0
         message = ""
+    }
+
+    fun setBaseDomain() {
+        setBaseUrl("https://$selectedServerDomainName")
     }
 }
