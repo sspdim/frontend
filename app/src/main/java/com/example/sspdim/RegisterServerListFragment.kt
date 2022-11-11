@@ -30,8 +30,6 @@ class RegisterServerListFragment: Fragment() {
 
     private val viewModel: RegisterViewModel by activityViewModels()
 
-    private var selectedServerDomainName: String = ""
-
     @SuppressLint("LongLogTag")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,8 +39,8 @@ class RegisterServerListFragment: Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.serversRecyclerView.adapter = ServerListAdapter { server ->
-            selectedServerDomainName = server.domainName
-            Log.d(TAG, "Selected server: $selectedServerDomainName")
+            viewModel.selectedServerDomainName = server.domainName
+            Log.d(TAG, "Selected server: ${viewModel.selectedServerDomainName}")
         }
 
         viewModel.getServerDetails()
@@ -61,8 +59,8 @@ class RegisterServerListFragment: Fragment() {
 
     @SuppressLint("LongLogTag")
     private fun onClickRegister() {
-        Log.d(TAG, "Selected server: $selectedServerDomainName")
-        if (selectedServerDomainName.isEmpty()) {
+        Log.d(TAG, "Selected server: ${viewModel.selectedServerDomainName}")
+        if (viewModel.selectedServerDomainName.isEmpty()) {
             try {
                 Toast.makeText(
                     requireContext(),
@@ -74,7 +72,7 @@ class RegisterServerListFragment: Fragment() {
             }
             return
         }
-        setBaseUrl("https://$selectedServerDomainName")
+        viewModel.setBaseDomain()
         var username : String = viewModel.submitRegisterDetails()
         var key : KeysModel = KeysModel(requireContext(), username)
         key.addKeys()
@@ -102,7 +100,7 @@ class RegisterServerListFragment: Fragment() {
                             requireContext()
                         )
                         settingsDataStore.saveServerPreference(
-                            selectedServerDomainName,
+                            viewModel.selectedServerDomainName,
                             requireContext()
                         )
                     }

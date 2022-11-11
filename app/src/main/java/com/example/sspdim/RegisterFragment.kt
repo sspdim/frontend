@@ -1,15 +1,26 @@
 package com.example.sspdim
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.example.sspdim.data.SettingsDataStore
 import com.example.sspdim.databinding.FragmentRegisterBinding
+import com.example.sspdim.model.KeysModel
 import com.example.sspdim.model.RegisterViewModel
+import com.example.sspdim.network.Response
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.json.JSONException
+
+private const val TAG = "RegisterFragment"
 
 class RegisterFragment(): Fragment() {
     private val viewModel: RegisterViewModel by activityViewModels()
@@ -17,8 +28,11 @@ class RegisterFragment(): Fragment() {
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var settingsDataStore: SettingsDataStore
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentRegisterBinding.inflate(inflater, container, false)
+        settingsDataStore = SettingsDataStore(requireContext())
         return binding.root
     }
 
@@ -79,13 +93,19 @@ class RegisterFragment(): Fragment() {
     }
 
     private fun onClickNext()  {
-        val username = binding.registerUsername.text.toString()
+        val list = binding.registerUsername.text.toString().split("@")
+        val username = list[0]
         val password = binding.registerPassword.text.toString()
         val confirmPassword = binding.registerConfirmPassword.text.toString()
         viewModel.initData(username, password, confirmPassword)
 
         if (!setError()) {
-            findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToRegisterServerListFragment())
+            if (list.size < 2) {
+                findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToRegisterServerListFragment())
+            }
+            else {
+                onClickRegister(list[1])
+            }
         }
     }
 
@@ -94,5 +114,51 @@ class RegisterFragment(): Fragment() {
         binding.registerUsername.setText(viewModel.username)
         binding.registerPassword.setText(viewModel.password)
         binding.registerConfirmPassword.setText(viewModel.confirmPassword)
+    }
+
+    private fun onClickRegister(serverDomain: String) {
+        Log.d(TAG, "Selected server: ${viewModel.selectedServerDomainName}")
+        viewModel.selectedServerDomainName = serverDomain
+        viewModel.setBaseDomain()
+        val username : String = viewModel.submitRegisterDetails()
+        val key : KeysModel = KeysModel(requireContext(), username)
+        key.addKeys()
+        val keyStatus = key.submitKeysDetails()
+        Log.d("srg", "${viewModel.status}, ${viewModel.message}; ${viewModel.response?.message}, ${viewModel.response?.status}")
+        if (viewModel.status > 0 && keyStatus == 200) {
+            try {
+                Toast.makeText(
+                    requireContext(),
+                    viewModel.message,
+                    Toast.LENGTH_LONG
+                ).show()
+            } catch (e: JSONException) {
+                Toast.makeText(requireContext(), "Error", Toast.LENGTH_LONG).show()
+            }
+        }
+        Log.d(TAG, "Registration response: ${viewModel.status}")
+        try {
+            if (viewModel.status == Response.STATUS_SUCCESS) {
+                runBlocking {
+                    launch {
+                        settingsDataStore.saveLoggedInPreference(true, requireContext())
+                        settingsDataStore.saveUsernamePreference(
+                            viewModel.username,
+                            requireContext()
+                        )
+                        settingsDataStore.saveServerPreference(
+                            viewModel.selectedServerDomainName,
+                            requireContext()
+                        )
+                    }
+                }
+                startActivity(Intent(requireContext(), ChatActivity::class.java))
+            }
+            else {
+                Log.d(TAG, "failed")
+            }
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
     }
 }
