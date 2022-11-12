@@ -88,9 +88,17 @@ class LoginFragment: Fragment() {
             if (list.size < 2) {
                 findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToLoginServerListFragment())
             }
+            else if (list.size > 2) {
+                Toast.makeText(requireContext(),"@ not allowed in username", Toast.LENGTH_SHORT).show()
+            }
             else {
-                Log.d(TAG, "Split result: ${list[1]}")
-                loginWithServer(list[1])
+                if(list[1].isNotEmpty()) {
+                    Log.d(TAG, "Split result: ${list[1]}")
+                    loginWithServer(list[1])
+                }
+                else {
+                    Toast.makeText(requireContext(),"Domain name cannot be empty", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

@@ -103,8 +103,16 @@ class RegisterFragment(): Fragment() {
             if (list.size < 2) {
                 findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToRegisterServerListFragment())
             }
+            else if (list.size > 2) {
+                Toast.makeText(requireContext(),"@ not allowed in username", Toast.LENGTH_SHORT).show()
+            }
             else {
-                onClickRegister(list[1])
+                if(list[1].isNotEmpty()) {
+                    onClickRegister(list[1])
+                }
+                else {
+                    Toast.makeText(requireContext(),"Domain name cannot be empty", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
