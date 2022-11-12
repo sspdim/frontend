@@ -173,15 +173,15 @@ class ChatListFragment: Fragment() {
             this.findNavController().navigate(action)
             },
             { friend ->
-                /*MaterialAlertDialogBuilder(requireContext())
+                MaterialAlertDialogBuilder(requireContext())
                     .setTitle("Warning")
                     .setMessage("This action is not reversible. Are you sure you want to remove this friend?")
                     .setCancelable(false)
                     .setNegativeButton("No") { _, _ -> }
                     .setPositiveButton("Yes") { _, _ ->
                         viewModel.removeFriend(friend.username)
-                    }*/
-                viewModel.removeFriend(friend.username)
+                    }
+                    .show()
             },
             { friend ->
                 viewModel.acceptFriendRequest(friend.username)
