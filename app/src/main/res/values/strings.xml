@@ -27,4 +27,6 @@
     <string name="logout_textview">Logout</string>
     <string name="backup_data">Backup Data</string>
     <string name="backup_data_textview">Backup Data</string>
+    <string name="restore_from_backup">Restore from Backup</string>
+    <string name="restore_from_backup_textview">Restore from Backup</string>
 </resources>

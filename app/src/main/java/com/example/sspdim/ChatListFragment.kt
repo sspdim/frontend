@@ -140,16 +140,22 @@ class ChatListFragment: Fragment() {
             onClickBackupButton()
         }
 
+        binding.restoreBackupButton.setOnClickListener {
+            onClickRestoreBackupButton()
+        }
+
         binding.extraOptionsButton.apply {
             setOnClickListener {
                 if (isExtraOptionsFabVisible) {
                     shrink()
                     binding.addFriendActionButton.visibility = View.GONE
                     binding.takeBackupButton.visibility = View.GONE
+                    binding.restoreBackupButton.visibility = View.GONE
                     binding.logoutButton.visibility = View.GONE
 
                     binding.addFriendTextview.visibility = View.GONE
                     binding.takeBackupTextview.visibility = View.GONE
+                    binding.restoreBackupTextview.visibility = View.GONE
                     binding.logoutTextview.visibility = View.GONE
                     isExtraOptionsFabVisible = false
                 }
@@ -157,10 +163,12 @@ class ChatListFragment: Fragment() {
                     extend()
                     binding.addFriendActionButton.show()
                     binding.takeBackupButton.show()
+                    binding.restoreBackupButton.show()
                     binding.logoutButton.show()
 
                     binding.addFriendTextview.visibility = View.VISIBLE
                     binding.takeBackupTextview.visibility = View.VISIBLE
+                    binding.restoreBackupTextview.visibility = View.VISIBLE
                     binding.logoutTextview.visibility = View.VISIBLE
                     isExtraOptionsFabVisible = true
                 }
@@ -274,6 +282,10 @@ class ChatListFragment: Fragment() {
     }
 
     private fun onClickBackupButton() {
+        // TODO()
+    }
+
+    private fun onClickRestoreBackupButton() {
         // TODO()
     }
 

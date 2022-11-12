@@ -20,8 +20,10 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:padding="16dp"
+            android:visibility="visible"
             app:chatListData="@{viewModel.chatList}"
-            tools:listitem="@layout/chat_list_item"/>
+            tools:listitem="@layout/chat_list_item"
+            tools:visibility="gone" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_friend_action_button"
@@ -34,19 +36,20 @@
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/take_backup_button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:tint="@android:color/white" />
+            app:tint="@android:color/white"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/add_friend_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@+id/add_friend_action_button"
-            app:layout_constraintTop_toTopOf="@+id/add_friend_action_button"
-            app:layout_constraintBottom_toBottomOf="@+id/add_friend_action_button"
-            android:visibility="gone"
             android:padding="10dp"
             android:text="@string/add_friend_textview"
-        />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/add_friend_action_button"
+            app:layout_constraintEnd_toStartOf="@+id/add_friend_action_button"
+            app:layout_constraintTop_toTopOf="@+id/add_friend_action_button"
+            tools:visibility="visible" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/take_backup_button"
@@ -57,21 +60,48 @@
             android:contentDescription="@string/backup_data"
             android:src="@drawable/ic_baseline_cloud_download_24"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/logout_button"
+            app:layout_constraintBottom_toTopOf="@id/restore_backup_button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:tint="@android:color/white" />
+            app:tint="@android:color/white"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/take_backup_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@+id/take_backup_button"
-            app:layout_constraintTop_toTopOf="@+id/take_backup_button"
-            app:layout_constraintBottom_toBottomOf="@+id/take_backup_button"
-            android:visibility="gone"
             android:padding="10dp"
             android:text="@string/backup_data_textview"
-            />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/take_backup_button"
+            app:layout_constraintEnd_toStartOf="@+id/take_backup_button"
+            app:layout_constraintTop_toTopOf="@+id/take_backup_button"
+            tools:visibility="visible" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/restore_backup_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="@string/restore_from_backup"
+            android:src="@drawable/ic_baseline_cloud_upload_24"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/logout_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@android:color/white"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/restore_backup_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/restore_from_backup_textview"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/restore_backup_button"
+            app:layout_constraintEnd_toStartOf="@+id/restore_backup_button"
+            app:layout_constraintTop_toTopOf="@+id/restore_backup_button"
+            tools:visibility="visible" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/logout_button"
@@ -85,19 +115,20 @@
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/extra_options_button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:tint="@android:color/white" />
+            app:tint="@android:color/white"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/logout_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@+id/logout_button"
-            app:layout_constraintTop_toTopOf="@+id/logout_button"
-            app:layout_constraintBottom_toBottomOf="@+id/logout_button"
-            android:visibility="gone"
             android:padding="10dp"
             android:text="@string/logout_textview"
-            />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/logout_button"
+            app:layout_constraintEnd_toStartOf="@+id/logout_button"
+            app:layout_constraintTop_toTopOf="@+id/logout_button"
+            tools:visibility="visible" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/extra_options_button"
