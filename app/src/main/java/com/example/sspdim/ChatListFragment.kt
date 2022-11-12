@@ -127,6 +127,10 @@ class ChatListFragment: Fragment() {
             onClickButton()
         }
 
+        binding.logoutButton.setOnClickListener {
+            onClickLogoutButton()
+        }
+
         activity?.let {
             LocalBroadcastManager.getInstance(it).registerReceiver(messageReceiver,
                 IntentFilter("FriendRequest"))
@@ -152,7 +156,9 @@ class ChatListFragment: Fragment() {
             initializeFirebase()
         }
         settingsDataStore.serverPreference.asLiveData().observe(viewLifecycleOwner) { value ->
-            viewModel.setServer(value)
+            if (value.isNotEmpty()) {
+                viewModel.setServer(value)
+            }
         }
         settingsDataStore.fcmTokenSentPreference.asLiveData().observe(viewLifecycleOwner) { value ->
             fcmTokenSent = value
@@ -209,6 +215,26 @@ class ChatListFragment: Fragment() {
 
     private fun onClickButton() {
         showAddFriendDialog()
+    }
+
+    private fun onClickLogoutButton() {
+        Log.d(TAG, "Logout button clicked")
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Warning")
+            .setMessage("Logging out will delete all user data. This action is not reversible. Are you sure you want to logout?")
+            .setCancelable(false)
+            .setNegativeButton("No") { _, _ -> }
+            .setPositiveButton("Yes") { _, _ ->
+                runBlocking {
+                    settingsDataStore.saveLoggedInPreference(false, requireContext())
+                    settingsDataStore.saveUsernamePreference("", requireContext())
+                    settingsDataStore.saveServerPreference("", requireContext())
+                    settingsDataStore.saveFcmTokenSentPreference(false, requireContext())
+                }
+                ((activity?.application) as SspdimApplication).database.clearAllTables()
+                startActivity(Intent(requireContext(), MainActivity::class.java))
+            }
+            .show()
     }
 
     private fun showAddFriendDialog() {
