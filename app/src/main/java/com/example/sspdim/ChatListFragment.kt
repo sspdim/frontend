@@ -136,22 +136,32 @@ class ChatListFragment: Fragment() {
             onClickLogoutButton()
         }
 
+        binding.takeBackupButton.setOnClickListener {
+            onClickBackupButton()
+        }
+
         binding.extraOptionsButton.apply {
             setOnClickListener {
                 if (isExtraOptionsFabVisible) {
                     shrink()
                     binding.addFriendActionButton.visibility = View.GONE
+                    binding.takeBackupButton.visibility = View.GONE
                     binding.logoutButton.visibility = View.GONE
-                    binding.logoutTextview.visibility = View.GONE
+
                     binding.addFriendTextview.visibility = View.GONE
+                    binding.takeBackupTextview.visibility = View.GONE
+                    binding.logoutTextview.visibility = View.GONE
                     isExtraOptionsFabVisible = false
                 }
                 else {
                     extend()
                     binding.addFriendActionButton.show()
+                    binding.takeBackupButton.show()
                     binding.logoutButton.show()
-                    binding.logoutTextview.visibility = View.VISIBLE
+
                     binding.addFriendTextview.visibility = View.VISIBLE
+                    binding.takeBackupTextview.visibility = View.VISIBLE
+                    binding.logoutTextview.visibility = View.VISIBLE
                     isExtraOptionsFabVisible = true
                 }
             }
@@ -261,6 +271,10 @@ class ChatListFragment: Fragment() {
                 startActivity(Intent(requireContext(), MainActivity::class.java))
             }
             .show()
+    }
+
+    private fun onClickBackupButton() {
+        // TODO()
     }
 
     private fun showAddFriendDialog() {
