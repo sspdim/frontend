@@ -23,4 +23,6 @@
     <string name="sign_up">Sign Up</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="logout">Logout</string>
+    <string name="add_friend_textview">Add Friend</string>
+    <string name="logout_textview">Logout</string>
 </resources>

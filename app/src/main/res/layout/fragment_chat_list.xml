@@ -31,9 +31,22 @@
             android:layout_marginBottom="8dp"
             android:contentDescription="@string/add_friend"
             android:src="@android:drawable/ic_input_add"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/logout_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:tint="@android:color/white"/>
+
+        <TextView
+            android:id="@+id/add_friend_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/add_friend_action_button"
+            app:layout_constraintTop_toTopOf="@+id/add_friend_action_button"
+            app:layout_constraintBottom_toBottomOf="@+id/add_friend_action_button"
+            android:visibility="gone"
+            android:padding="10dp"
+            android:text="@string/add_friend_textview"
+        />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/logout_button"
@@ -44,8 +57,32 @@
             android:contentDescription="@string/logout"
             android:src="@drawable/ic_baseline_exit_to_app_24"
             android:backgroundTint="@color/red_700"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/extra_options_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:tint="@android:color/white"/>
+
+        <TextView
+            android:id="@+id/logout_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/logout_button"
+            app:layout_constraintTop_toTopOf="@+id/logout_button"
+            app:layout_constraintBottom_toBottomOf="@+id/logout_button"
+            android:visibility="gone"
+            android:padding="10dp"
+            android:text="@string/logout_textview"
+            />
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/extra_options_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Actions"
+            app:icon="@android:drawable/ic_input_add"
+            android:layout_margin="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
     </layout>

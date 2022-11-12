@@ -10,6 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
@@ -37,6 +39,7 @@ private const val TAG = "ChatListFragment"
 
 class ChatListFragment: Fragment() {
     private var fcmTokenSent: Boolean = false
+    private var isExtraOptionsFabVisible = false
 
     private lateinit var settingsDataStore: SettingsDataStore
 
@@ -123,12 +126,35 @@ class ChatListFragment: Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.extraOptionsButton.shrink()
+
         binding.addFriendActionButton.setOnClickListener {
             onClickButton()
         }
 
         binding.logoutButton.setOnClickListener {
             onClickLogoutButton()
+        }
+
+        binding.extraOptionsButton.apply {
+            setOnClickListener {
+                if (isExtraOptionsFabVisible) {
+                    shrink()
+                    binding.addFriendActionButton.visibility = View.GONE
+                    binding.logoutButton.visibility = View.GONE
+                    binding.logoutTextview.visibility = View.GONE
+                    binding.addFriendTextview.visibility = View.GONE
+                    isExtraOptionsFabVisible = false
+                }
+                else {
+                    extend()
+                    binding.addFriendActionButton.show()
+                    binding.logoutButton.show()
+                    binding.logoutTextview.visibility = View.VISIBLE
+                    binding.addFriendTextview.visibility = View.VISIBLE
+                    isExtraOptionsFabVisible = true
+                }
+            }
         }
 
         activity?.let {
