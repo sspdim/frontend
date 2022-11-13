@@ -1,29 +1,29 @@
 package com.example.sspdim.database
 
 import android.content.Context
-import androidx.annotation.WorkerThread
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Friend::class, ChatMessage::class], version = 1, exportSchema = false)
-abstract class AppDatabase: RoomDatabase() {
-    abstract fun friendDao(): FriendDao
+@Database(entities = [Keys::class], version = 1, exportSchema = false)
+abstract class KeysDatabase: RoomDatabase() {
 
-    abstract fun chatMessageDao(): ChatMessageDao
+    abstract fun keysDao(): KeysDao
 
     companion object {
         @Volatile
-        private var INSTANCE: AppDatabase? = null
+        private var INSTANCE: KeysDatabase? = null
 
-        fun getDatabase(context: Context): AppDatabase {
+        fun getKeyDatabase(context: Context): KeysDatabase {
+            var converter = Converters()
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    AppDatabase::class.java,
-                    "app_database"
+                    KeysDatabase::class.java,
+                    "keys-db"
                 )
                     .fallbackToDestructiveMigration()
+                    .addTypeConverter(converter)
                     .allowMainThreadQueries()
                     .build()
                 INSTANCE = instance

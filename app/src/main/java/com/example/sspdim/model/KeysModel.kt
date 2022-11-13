@@ -3,9 +3,9 @@ package com.example.sspdim.model
 import android.content.Context
 import android.util.Base64
 import android.util.Log
-import com.example.sspdim.database.AppDatabase
 import com.example.sspdim.database.Converters
 import com.example.sspdim.database.Keys
+import com.example.sspdim.database.KeysDatabase
 import com.example.sspdim.network.KeysRequest
 import com.example.sspdim.network.PrekeysRequest
 import com.example.sspdim.network.Response
@@ -29,7 +29,7 @@ class KeysModel(context: Context, username : String) {
     var preKeys : List<PreKeyRecord> = KeyHelper.generatePreKeys(1, 100)
     var signedPreKey : SignedPreKeyRecord = KeyHelper.generateSignedPreKey(identityKeyPair, 5)
 
-    var database = AppDatabase.getDatabase(context)
+    var database = KeysDatabase.getKeyDatabase(context)
     var keys : ArrayList<ByteArray> = ArrayList()
     var keysAsString : ArrayList<String> = ArrayList()
 

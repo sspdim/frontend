@@ -1,13 +1,11 @@
 package com.example.sspdim.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.example.sspdim.database.ChatMessage.Companion.MESSAGE_RECEIVED
 import com.example.sspdim.database.ChatMessage.Companion.MESSAGE_SENT
 import kotlinx.coroutines.flow.Flow
+
 
 @Dao
 interface ChatMessageDao {
@@ -28,4 +26,7 @@ interface ChatMessageDao {
 
     @Query("delete from chats where friend_username=:friendUsername")
     fun deleteFriendChats(friendUsername: String)
+
+    @RawQuery
+    fun checkpoint(supportSQLiteQuery: SupportSQLiteQuery): Int
 }
