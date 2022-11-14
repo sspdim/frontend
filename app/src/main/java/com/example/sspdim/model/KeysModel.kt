@@ -114,4 +114,8 @@ class KeysModel(context: Context, username : String) {
         preKeys.forEach { key -> keys.add(Base64.decode(key, Base64.DEFAULT))}
         return keys
     }
+
+    suspend fun deleteAllKeys() {
+        database.keysDao().deleteAllKeys()
+    }
 }

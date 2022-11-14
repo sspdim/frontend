@@ -24,6 +24,7 @@ import com.example.sspdim.model.ChatMessageAdapter
 import com.example.sspdim.model.ChatViewModel
 import com.example.sspdim.model.ChatViewModelFactory
 import com.example.sspdim.model.SessionModel
+import org.whispersystems.libsignal.UntrustedIdentityException
 import kotlin.properties.Delegates
 
 private const val TAG = "ChatFragment"
@@ -185,7 +186,10 @@ class ChatFragment: Fragment() {
                     viewModel.addMessage(request.fromUsername, decryptedMessage, request.messageId)
                 }
                 catch (e: Exception) {
-                    Toast.makeText(requireContext(), "Your server is down", Toast.LENGTH_SHORT).show()
+                    if (e !is UntrustedIdentityException) {
+                        Toast.makeText(requireContext(), "Your server is down", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                     e.printStackTrace()
                 }
             }

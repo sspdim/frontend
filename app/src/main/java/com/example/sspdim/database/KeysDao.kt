@@ -14,4 +14,7 @@ interface KeysDao {
 
     @Query("update keys set preKeys = :preKeys")
     suspend fun updatePrekeys(preKeys: List<String>)
+
+    @Query("delete from keys")
+    suspend fun deleteAllKeys()
 }

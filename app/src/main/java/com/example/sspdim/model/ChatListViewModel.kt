@@ -1,5 +1,6 @@
 package com.example.sspdim.model
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.sspdim.database.ChatMessageDao
@@ -122,6 +123,13 @@ class ChatListViewModel(private val friendDao: FriendDao,
         viewModelScope.launch {
             Log.d(TAG, "Removing Friend")
             friendDao.deleteFriend(friendUsername)
+        }
+    }
+
+    fun deleteAllKeys(context: Context) {
+        val keysModel = KeysModel(context, username)
+        viewModelScope.launch {
+            keysModel.deleteAllKeys()
         }
     }
 }
