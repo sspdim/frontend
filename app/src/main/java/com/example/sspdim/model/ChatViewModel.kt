@@ -11,6 +11,7 @@ import com.example.sspdim.database.ChatMessage.Companion.TYPE_MY_MESSAGE
 import com.example.sspdim.database.ChatMessageDao
 import com.example.sspdim.network.*
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 private const val TAG = "ChatViewModel"
 
@@ -42,9 +43,10 @@ class ChatViewModel(
         var response: Response?
         val res = MutableLiveData<Int>()
         val currentTime = System.currentTimeMillis() / 1000
-        var messageId = (0..Int.MAX_VALUE).random()
+        var randomGenerater = Random(currentTime)
+        var messageId = randomGenerater.nextInt(0, Int.MAX_VALUE)
         while (messageIds.contains(messageId)) {
-            messageId = (0..Int.MAX_VALUE).random()
+            messageId = randomGenerater.nextInt(0, Int.MAX_VALUE)
         }
         messageIds.add(messageId)
         Log.d(TAG, "sendMessage Message Id: $messageId")
