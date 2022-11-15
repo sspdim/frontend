@@ -33,7 +33,7 @@ class BackupAndRestore(context: Context) {
             Toast.makeText(context, "Backup store at $backupFile", Toast.LENGTH_SHORT).show()
         }
         catch (e: Exception) {
-            Log.d(TAG, "Error taking backup")
+            Log.d(TAG, "Error taking backup: $backupFolder")
             e.printStackTrace()
             Toast.makeText(context, "Error taking backup!", Toast.LENGTH_SHORT).show()
         }

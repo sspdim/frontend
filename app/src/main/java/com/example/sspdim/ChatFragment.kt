@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,6 +26,7 @@ import com.example.sspdim.model.ChatMessageAdapter
 import com.example.sspdim.model.ChatViewModel
 import com.example.sspdim.model.ChatViewModelFactory
 import com.example.sspdim.model.SessionModel
+import com.example.sspdim.network.isOnline
 import org.whispersystems.libsignal.UntrustedIdentityException
 import kotlin.properties.Delegates
 
@@ -176,23 +179,41 @@ class ChatFragment: Fragment() {
     override fun onResume() {
         super.onResume()
         Log.d(TAG, "onResume")
-        val pendingRequests = viewModel.getPendingMessages()
-        pendingRequests.observe(requireActivity()) {
-            it.forEach { request ->
-                Log.d(TAG, "Pending request from ${request.fromUsername}")
-                try {
-                    var sessionModel: SessionModel = SessionModel("$username@$server")
-                    var decryptedMessage: String = sessionModel.decrypt(requireContext(), request.messageContent)
-                    viewModel.addMessage(request.fromUsername, decryptedMessage, request.messageId)
-                }
-                catch (e: Exception) {
-                    if (e !is UntrustedIdentityException) {
-                        Toast.makeText(requireContext(), "Your server is down", Toast.LENGTH_SHORT)
-                            .show()
+        if (isOnline(requireContext())) {
+            val pendingRequests = viewModel.getPendingMessages()
+            pendingRequests.observe(requireActivity()) {
+                it.forEach { request ->
+                    Log.d(TAG, "Pending request from ${request.fromUsername}")
+                    try {
+                        var sessionModel: SessionModel = SessionModel("$username@$server")
+                        var decryptedMessage: String =
+                            sessionModel.decrypt(requireContext(), request.messageContent)
+                        viewModel.addMessage(
+                            request.fromUsername,
+                            decryptedMessage,
+                            request.messageId
+                        )
+                    } catch (e: Exception) {
+                        if (e !is UntrustedIdentityException) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Your server is down",
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                        }
+                        e.printStackTrace()
                     }
-                    e.printStackTrace()
                 }
             }
+        }
+        else {
+            Log.d(TAG, "Server unreachable")
+            Toast.makeText(
+                requireContext(),
+                "Server is unreachable!",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 

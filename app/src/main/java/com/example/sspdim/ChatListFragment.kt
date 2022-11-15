@@ -12,8 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
@@ -31,6 +29,7 @@ import com.example.sspdim.model.ChatListViewModelFactory
 import com.example.sspdim.model.KeysModel
 import com.example.sspdim.network.AddFirebaseTokenRequest
 import com.example.sspdim.network.SspdimApi
+import com.example.sspdim.network.isOnline
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.tasks.OnCompleteListener
@@ -114,12 +113,23 @@ class ChatListFragment: Fragment() {
                 )
                 Log.d(TAG, "${res?.text}")
                 if (!res?.text.isNullOrEmpty()) {
-                    val resp: LiveData<Int> = viewModel.sendAddFriendRequest(res!!.text.toString())
-                    resp.observe(requireActivity()) {
-                        Log.d(TAG, "Response from server: ${resp.value}")
+                    if (isOnline(requireContext())) {
+                        val resp: LiveData<Int> =
+                            viewModel.sendAddFriendRequest(res!!.text.toString())
+                        resp.observe(requireActivity()) {
+                            Log.d(TAG, "Response from server: ${resp.value}")
+                            Toast.makeText(
+                                requireContext(),
+                                "Friend request sent!",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+                    else {
+                        Log.d(TAG, "Server unreachable")
                         Toast.makeText(
                             requireContext(),
-                            "Friend request sent!",
+                            "Server is unreachable!",
                             Toast.LENGTH_LONG
                         ).show()
                     }
@@ -233,7 +243,17 @@ class ChatListFragment: Fragment() {
                     .show()
             },
             { friend ->
-                viewModel.acceptFriendRequest(friend.username)
+                if (isOnline(requireContext())) {
+                    viewModel.acceptFriendRequest(friend.username)
+                }
+                else {
+                    Log.d(TAG, "Server unreachable")
+                    Toast.makeText(
+                        requireContext(),
+                        "Server is unreachable!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             },
             { friend ->
                 viewModel.declineFriendRequest(friend.username)
@@ -253,12 +273,22 @@ class ChatListFragment: Fragment() {
     override fun onResume() {
         super.onResume()
         Log.d(TAG, "onResume")
-        val pendingRequests = viewModel.getPendingRequests()
-        pendingRequests.observe(requireActivity()) {
-            it.forEach { request ->
-                Log.d(TAG, "Pending request from ${request.fromUsername}")
-                viewModel.updateFriendsList(request.fromUsername, request.status)
+        if (isOnline(requireContext())) {
+            val pendingRequests = viewModel.getPendingRequests()
+            pendingRequests.observe(requireActivity()) {
+                it.forEach { request ->
+                    Log.d(TAG, "Pending request from ${request.fromUsername}")
+                    viewModel.updateFriendsList(request.fromUsername, request.status)
+                }
             }
+        }
+        else {
+            Log.d(TAG, "Server unreachable")
+            Toast.makeText(
+                requireContext(),
+                "Server is unreachable!",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
