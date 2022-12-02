@@ -94,6 +94,16 @@ class SessionModel(username: String) {
         return String(decryptedMessage, StandardCharsets.UTF_8)
     }
 
+    fun decryptNotification(context: Context, message: String): String {
+        var message : ByteArray = Base64.decode(message, Base64.DEFAULT)
+        val keysModel = KeysModel(context, username)
+        getKeysDetails()
+        preKeys = keysModel.getPrekeys()
+        session()
+        var decryptedMessage : ByteArray = sessionCipher.decrypt(PreKeySignalMessage(message))
+        return String(decryptedMessage, StandardCharsets.UTF_8)
+    }
+
     private fun resetStatus() {
         status = 0
         message = ""
