@@ -11,9 +11,9 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import com.example.sspdim.crypto.KeysModel
 import com.example.sspdim.data.SettingsDataStore
 import com.example.sspdim.databinding.FragmentLoginBinding
-import com.example.sspdim.model.KeysModel
 import com.example.sspdim.model.LoginViewModel
 import com.example.sspdim.network.Response
 import kotlinx.coroutines.launch

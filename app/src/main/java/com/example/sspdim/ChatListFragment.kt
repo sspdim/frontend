@@ -20,13 +20,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.sspdim.backup.BackupAndRestore
 import com.example.sspdim.data.SettingsDataStore
-import com.example.sspdim.database.BackupAndRestore
 import com.example.sspdim.databinding.FragmentChatListBinding
 import com.example.sspdim.model.ChatListAdapter
 import com.example.sspdim.model.ChatListViewModel
 import com.example.sspdim.model.ChatListViewModelFactory
-import com.example.sspdim.model.KeysModel
 import com.example.sspdim.network.AddFirebaseTokenRequest
 import com.example.sspdim.network.SspdimApi
 import com.example.sspdim.network.isOnline

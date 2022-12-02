@@ -3,6 +3,7 @@ package com.example.sspdim.model
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
+import com.example.sspdim.crypto.SessionModel
 import com.example.sspdim.database.ChatMessage
 import com.example.sspdim.database.ChatMessage.Companion.MESSAGE_RECEIVED
 import com.example.sspdim.database.ChatMessage.Companion.MESSAGE_SENT

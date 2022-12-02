@@ -3,6 +3,7 @@ package com.example.sspdim.model
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
+import com.example.sspdim.crypto.KeysModel
 import com.example.sspdim.database.ChatMessageDao
 import com.example.sspdim.database.Friend
 import com.example.sspdim.database.Friend.Companion.FRIEND_REQUEST_ACCEPTED
