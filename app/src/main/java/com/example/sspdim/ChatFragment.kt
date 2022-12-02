@@ -17,13 +17,13 @@ import androidx.lifecycle.asLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.sspdim.crypto.SessionModel
 import com.example.sspdim.data.SettingsDataStore
 import com.example.sspdim.database.Friend.Companion.FRIEND_REQUEST_ACCEPTED
 import com.example.sspdim.databinding.FragmentChatBinding
 import com.example.sspdim.model.ChatMessageAdapter
 import com.example.sspdim.model.ChatViewModel
 import com.example.sspdim.model.ChatViewModelFactory
-import com.example.sspdim.model.SessionModel
 import kotlin.properties.Delegates
 
 private const val TAG = "ChatFragment"

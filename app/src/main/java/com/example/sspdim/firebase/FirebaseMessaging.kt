@@ -13,8 +13,8 @@ import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.sspdim.MainActivity
 import com.example.sspdim.R
+import com.example.sspdim.crypto.SessionModel
 import com.example.sspdim.data.SettingsDataStore
-import com.example.sspdim.model.SessionModel
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.flow.first
