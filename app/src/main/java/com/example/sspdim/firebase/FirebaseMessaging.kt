@@ -85,6 +85,7 @@ class FirebaseMessaging: FirebaseMessagingService() {
                 intent.putExtra("from", message.data["data"])
                 intent.putExtra("message", message.data["message"])
                 intent.putExtra("message_id", message.data["message_id"])
+                intent.putExtra("timestamp", message.data["timestamp"])
                 Log.d("FirebaseMessageIntent", "data: ${message.data["data"]}, ${message.data["message"]}")
                 broadcaster?.sendBroadcast(intent)
             }
