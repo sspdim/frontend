@@ -43,7 +43,7 @@ class ChatViewModel(
     fun sendMessage(context: Context, messageContent: String): LiveData<Int> {
         var response: Response?
         val res = MutableLiveData<Int>()
-        val currentTime = System.currentTimeMillis() / 1000
+        val currentTime = System.currentTimeMillis()
         var randomGenerater = Random(currentTime)
         var messageId = randomGenerater.nextInt(0, Int.MAX_VALUE)
         while (messageIds.contains(messageId)) {
@@ -53,7 +53,7 @@ class ChatViewModel(
         Log.d(TAG, "sendMessage Message Id: $messageId")
         val newMessage = ChatMessage(
             friendUsername, messageId,
-            TYPE_MY_MESSAGE, currentTime.toInt(), messageContent, MESSAGE_SENT
+            TYPE_MY_MESSAGE, currentTime.toString(), messageContent, MESSAGE_SENT
         )
         /*
         messageId is random for now. Intention is to maintain counter to help decrypt messages received out of order.
@@ -63,7 +63,7 @@ class ChatViewModel(
         val encryptedMessage: String? = sessionModel.encrypt(context, messageContent.toByteArray())
         viewModelScope.launch {
             try {
-                val request = SendMessageRequest("$username@$server", friendUsername, encryptedMessage!!, messageId.toString())
+                val request = SendMessageRequest("$username@$server", friendUsername, encryptedMessage!!, messageId.toString(), currentTime.toString())
                 Log.d(TAG, "${request.to}, ${request.from}, ${request.message}")
                 response = SspdimApi.retrofitService.sendMessage(request)
                 res.postValue(response?.status)
@@ -80,12 +80,12 @@ class ChatViewModel(
         return res
     }
 
-    fun addMessage(fromUsername: String, messageContent: String, messageId: String) {
+    fun addMessage(fromUsername: String, messageContent: String, messageId: String, timestamp: String) {
         val currentTime = System.currentTimeMillis() / 1000
         Log.d(TAG, "addMessage Message Id: $messageId")
         val newMessage = ChatMessage(
             fromUsername, messageId.toInt(),
-            TYPE_FRIEND_MESSAGE, currentTime.toInt(), messageContent, MESSAGE_RECEIVED
+            TYPE_FRIEND_MESSAGE, timestamp, messageContent, MESSAGE_RECEIVED
         )
         Log.d(TAG, newMessage.toString())
         viewModelScope.launch {

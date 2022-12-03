@@ -12,7 +12,7 @@ data class ChatMessage (
     @ColumnInfo(name = "sender")
     val sender: Int,
     @ColumnInfo(name = "timestamp")
-    val timestamp: Int,
+    val timestamp: String,
     @ColumnInfo(name = "message_content")
     val messageContent: String,
     @ColumnInfo(name = "status")

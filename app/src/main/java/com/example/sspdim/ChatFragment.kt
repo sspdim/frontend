@@ -58,6 +58,7 @@ class ChatFragment: Fragment() {
                 val from = bundle?.getString("from")
                 val message = bundle?.getString("message")
                 val messageId = bundle?.getString("message_id")
+                val timestamp = bundle?.getString("timestamp")
                 Log.d(TAG, "From: $from, message: ${message!!.toByteArray()}, message_id: $messageId}")
                 try {
                     var sessionModel: SessionModel = SessionModel("$username@$server")
@@ -65,9 +66,10 @@ class ChatFragment: Fragment() {
                     Log.d(TAG, "From: $from, message: $decryptedMessage, message_id: $messageId}")
                     if (from != null &&
                         message != null &&
-                        messageId != null
+                        messageId != null &&
+                        timestamp != null
                     ) {
-                        viewModel.addMessage(from, decryptedMessage, messageId)
+                        viewModel.addMessage(from, decryptedMessage, messageId, timestamp)
                     }
                 }
                 catch (e: Exception) {
@@ -85,11 +87,13 @@ class ChatFragment: Fragment() {
             val from = bundle.getString("from")
             val message = bundle.getString("message")
             val messageId = bundle.getString("message_id")
+            val timestamp = bundle?.getString("timestamp")
             Log.d(TAG, "From: $from, message: $message, message_id: $messageId}")
             if (from != null &&
                 message != null &&
-                messageId != null) {
-                viewModel.addMessage(from, message, messageId)
+                messageId != null &&
+                timestamp != null) {
+                viewModel.addMessage(from, message, messageId, timestamp)
             }
         }
 
@@ -124,11 +128,13 @@ class ChatFragment: Fragment() {
             val from = bundle.getString("from")
             val message = bundle.getString("message")
             val messageId = bundle.getString("message_id")
+            val timestamp = bundle?.getString("timestamp")
             Log.d(TAG, "From: $from, message: $message, message_id: $messageId}")
             if (from != null &&
                 message != null &&
-                messageId != null) {
-                viewModel.addMessage(from, message, messageId)
+                messageId != null &&
+                timestamp != null) {
+                viewModel.addMessage(from, message, messageId, timestamp)
             }
         }
 
@@ -182,7 +188,7 @@ class ChatFragment: Fragment() {
                 try {
                     var sessionModel: SessionModel = SessionModel("$username@$server")
                     var decryptedMessage: String = sessionModel.decrypt(requireContext(), request.messageContent)
-                    viewModel.addMessage(request.fromUsername, decryptedMessage, request.messageId)
+                    viewModel.addMessage(request.fromUsername, decryptedMessage, request.messageId, request.timestamp)
                 }
                 catch (e: Exception) {
                     Toast.makeText(requireContext(), "Your server is down", Toast.LENGTH_SHORT).show()
